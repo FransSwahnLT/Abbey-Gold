@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚙ Dev — Keith's</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0d0d0d;
+      min-height: 100vh;
+      font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', ui-monospace, monospace;
+      overflow-x: auto;
+    }
+
+    /* ── Toolbar ──────────────────────────────────────────────────── */
+    .toolbar {
+      position: fixed;
+      inset: 0 0 auto 0;
+      height: 44px;
+      background: #080808;
+      border-bottom: 1px solid #1e1e1e;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 16px;
+      z-index: 999;
+      user-select: none;
+    }
+
+    .badge {
+      background: #c0392b;
+      color: #fff;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      padding: 2px 6px;
+      border-radius: 3px;
+      flex-shrink: 0;
+    }
+
+    .sep {
+      width: 1px;
+      height: 18px;
+      background: #1e1e1e;
+      margin: 0 4px;
+      flex-shrink: 0;
+    }
+
+    .vp-btn {
+      background: #141414;
+      border: 1px solid #242424;
+      color: #555;
+      font: inherit;
+      font-size: 11px;
+      padding: 4px 11px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: border-color 0.1s, color 0.1s, background 0.1s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .vp-btn:hover {
+      border-color: #3a3a3a;
+      color: #aaa;
+    }
+    .vp-btn.active {
+      background: #0f2a5e;
+      border-color: #1d4ed8;
+      color: #93c5fd;
+    }
+
+    .toolbar__right {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-shrink: 0;
+    }
+
+    .dims {
+      font-size: 11px;
+      color: #2e2e2e;
+    }
+    .dims b { color: #3d3d3d; font-weight: 500; }
+
+    .zoom-pill {
+      display: none;
+      font-size: 10px;
+      color: #854d0e;
+      background: #1c1002;
+      border: 1px solid #2d1f04;
+      padding: 2px 7px;
+      border-radius: 3px;
+    }
+    .zoom-pill.visible { display: inline; }
+
+    /* ── Canvas ───────────────────────────────────────────────────── */
+    .canvas {
+      margin-top: 44px;
+      min-height: calc(100vh - 44px);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 32px 24px 64px;
+    }
+
+    /* ── Device frame ─────────────────────────────────────────────── */
+    .device {
+      position: relative;
+      flex-shrink: 0;
+      box-shadow:
+        0 0 0 1px #1e1e1e,
+        0 24px 80px rgba(0,0,0,0.7);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .device__iframe {
+      display: block;
+      border: none;
+      transform-origin: top left;
+    }
+
+    .device__label {
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 10px;
+      letter-spacing: 0.1em;
+      color: #2a2a2a;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="toolbar">
+    <span class="badge">DEV</span>
+    <span class="sep"></span>
+    <button class="vp-btn"        id="btn-xl"      onclick="setVP('xl')">Desktop XL</button>
+    <button class="vp-btn active" id="btn-desktop" onclick="setVP('desktop')">Desktop</button>
+    <button class="vp-btn"        id="btn-tablet"  onclick="setVP('tablet')">Tablet Portrait</button>
+    <button class="vp-btn"        id="btn-mobile"  onclick="setVP('mobile')">Mobile</button>
+    <div class="toolbar__right">
+      <span class="zoom-pill" id="zoom-pill">75% zoom</span>
+      <span class="dims" id="dims"><b>1280</b> × <b>800</b></span>
+    </div>
+  </div>
+
+  <div class="canvas">
+    <div class="device" id="device">
+      <iframe class="device__iframe" id="preview" src="index.html" scrolling="yes"></iframe>
+      <span class="device__label" id="device-label">Desktop · 1280 × 800</span>
+    </div>
+  </div>
+
+  <script>
+    /*
+      Viewport presets
+      w/h  = physical iframe dimensions (what the CSS inside sees)
+      scale = visual zoom applied via transform
+      The device container is clipped to w*scale × h*scale so the
+      canvas layout is correct. State/scroll inside the iframe is
+      preserved because we never change the src.
+    */
+    const PRESETS = {
+      xl:      { w: 1600, h: 900,  scale: 0.75 },
+      desktop: { w: 1280, h: 800,  scale: 0.75 },
+      tablet:  { w: 768,  h: 1024, scale: 0.75 },
+      mobile:  { w: 390,  h: 844,  scale: 0.75 },
+    };
+
+    const LABELS = {
+      xl:      'Desktop XL · 1600 × 900',
+      desktop: 'Desktop · 1280 × 800',
+      tablet:  'Tablet Portrait · 768 × 1024',
+      mobile:  'Mobile · 390 × 844',
+    };
+
+    let current = null; // null so initial setVP('desktop') always executes
+
+    function setVP(key) {
+      if (key === current) return;
+      current = key;
+
+      const p      = PRESETS[key];
+      const iframe = document.getElementById('preview');
+      const device = document.getElementById('device');
+      const dims   = document.getElementById('dims');
+      const pill   = document.getElementById('zoom-pill');
+      const lbl    = document.getElementById('device-label');
+
+      /* Resize iframe to physical resolution (what CSS media queries see) */
+      iframe.style.width  = p.w + 'px';
+      iframe.style.height = p.h + 'px';
+
+      /* All presets render at 75% visual scale */
+      iframe.style.transform = `scale(${p.scale})`;
+
+      /* Clip device container to post-scale visual size */
+      device.style.width  = Math.round(p.w * p.scale) + 'px';
+      device.style.height = Math.round(p.h * p.scale) + 'px';
+
+      /* Labels — zoom pill always visible (all presets are 75%) */
+      dims.innerHTML  = `<b>${p.w}</b> × <b>${p.h}</b>`;
+      pill.className  = 'zoom-pill visible';
+      lbl.textContent = LABELS[key];
+
+      /* Button states */
+      document.querySelectorAll('.vp-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('btn-' + key).classList.add('active');
+    }
+
+    /* Boot */
+    setVP('desktop');
+  </script>
+
+</body>
+</html>

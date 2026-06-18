@@ -1,0 +1,679 @@
+/* ─── Reset ─────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ─── Design tokens ─────────────────────────────────────────────── */
+/*
+  Fluid type scale  clamp(min, preferred, max)
+  Viewport range: 375px → 1440px  |  slope = (max−min)/1065 × 100
+
+  Padding system
+    X:  S=2.5vw   M=5vw    L=10vw
+    Y:  S=1.3vh   M=2.5vh  L=5vh
+*/
+:root {
+  /* Type scale */
+  --text-h1:       clamp(2rem,    1.12rem + 3.76vw, 4.5rem);    /* 32→72px  */
+  --text-h2:       clamp(1.5rem,  0.62rem + 3.76vw, 4rem);      /* 24→64px  */
+  --text-h3:       clamp(1.25rem, 0.63rem + 2.63vw, 3rem);      /* 20→48px  */
+  --text-h4:       clamp(1.125rem,0.64rem + 2.07vw, 2.5rem);    /* 18→40px  */
+  --text-subtitle: clamp(1rem,    0.96rem + 0.19vw, 1.125rem);  /* 16→18px  */
+  --text-body:     clamp(1rem,    0.96rem + 0.19vw, 1.125rem);  /* 16→18px  */
+  --text-small:    clamp(0.875rem,0.83rem + 0.19vw, 1rem);      /* 14→16px  */
+  --text-caption:  clamp(0.625rem,0.58rem + 0.19vw, 0.75rem);   /* 10→12px  */
+  --text-btn:      clamp(0.75rem, 0.66rem + 0.38vw, 1rem);      /* 12→16px  */
+
+  /* Logo: 24px → 60px */
+  --logo-size: clamp(1.5rem, 0.708rem + 3.38vw, 3.75rem);
+
+  /* Padding system */
+  --pad-x-s: 2.5vw;
+  --pad-x-m: 5vw;
+  --pad-x-l: 10vw;
+  --pad-y-s: 1.3vh;
+  --pad-y-m: 2.5vh;
+  --pad-y-l: 5vh;
+
+  /* Colors */
+  --color-primary: #28416B;
+  --color-bg:      #FCFDFC;
+  --color-text:    #0C0D0E;
+  --color-white:   #FCFDFC;
+  --font:          'Syne', sans-serif;
+}
+
+/* ─── Base ──────────────────────────────────────────────────────── */
+html { font-size: 16px; }
+
+body {
+  font-family: var(--font);
+  font-size: var(--text-body);
+  background: var(--color-bg);
+  color: var(--color-text);
+  -webkit-font-smoothing: antialiased;
+}
+
+img { display: block; max-width: 100%; }
+ul  { list-style: none; }
+a   { color: inherit; text-decoration: none; }
+
+/* ─── Buttons ───────────────────────────────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 20px;
+  font-family: var(--font);
+  font-size: var(--text-btn);
+  font-weight: 500;
+  line-height: 1.25;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.15s;
+}
+.btn:hover { opacity: 0.82; }
+
+.btn--primary {
+  background: var(--color-primary);
+  color: #fff;
+  border-radius: 8px;
+}
+
+/* Used for both hero secondary and nav CTA */
+.btn--outline {
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid var(--color-primary);
+  border-radius: 8px;
+}
+
+/* ─── Hero ─────────────────────────────────────────────────────── */
+.hero {
+  position: fixed;          /* overlays scroll stack; spacer holds layout slot */
+  top: 0; left: 0; right: 0;
+  width: 100%;
+  height: 100svh;
+  min-height: 480px;
+  overflow: hidden;
+  z-index: 5;
+  will-change: transform;
+  /* snap-back: smooth ease-out */
+  transition: transform 0.38s cubic-bezier(0, 0, 0.2, 1);
+}
+
+/* Snappy exit — fast ease-in */
+.hero.is-snapped {
+  transform: translateY(-100%);
+  transition: transform 0.22s cubic-bezier(0.55, 0, 1, 0.45);
+}
+
+/* Spacer mirrors hero height to keep content layout correct */
+.hero-spacer {
+  display: block;
+  height: 100svh;
+  min-height: 480px;
+}
+
+/* Portrait tablet + all mobile → 66svh */
+@media (max-width: 767px),
+       (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .hero        { height: 66svh; min-height: 320px; }
+  .hero-spacer { height: 66svh; min-height: 320px; }
+}
+
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+}
+
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.50)  0%,
+    rgba(0, 0, 0, 0.14) 47%,
+    rgba(0, 0, 0, 0.00) 72%
+  );
+  pointer-events: none;
+}
+
+/* Hero content anchored by M/L padding from edges */
+.hero__content {
+  position: absolute;
+  bottom: var(--pad-y-l);   /* L = 5vh */
+  right:  var(--pad-x-m);   /* M = 5vw */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: flex-end;
+}
+
+.hero__text {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-end;
+  text-align: right;
+  color: var(--color-white);
+}
+
+.hero__heading {
+  font-size: var(--text-h1);
+  font-weight: 400;
+  line-height: 1.05;
+  letter-spacing: -0.04em;
+  color: var(--color-white);
+}
+
+.hero__sub {
+  font-size: var(--text-subtitle);
+  font-weight: 500;
+  line-height: 1.7;
+  color: var(--color-white);
+}
+
+.hero__actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+/* ── Hero content entrance: slide up + fade, 1s duration, 1s delay */
+@keyframes hero-enter {
+  from { opacity: 0; transform: translateY(40px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.hero__content {
+  /* paused — JS sets running once hero image is loaded */
+  animation: hero-enter 1000ms cubic-bezier(0.16, 1, 0.3, 1) 1000ms both paused;
+}
+
+/* ── Nav sequence: hero complete → nav items → CTA
+   .nav-sequencing is added by an inline script at the top of <header>
+   so elements start in their hidden state before the browser renders them.
+   JS sets animationPlayState = 'running' on each stage in turn. */
+@keyframes nav-item-enter {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes nav-cta-enter {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.nav-sequencing .nav-list__item .nav-link {
+  animation: nav-item-enter 380ms cubic-bezier(0.16, 1, 0.3, 1) both paused;
+}
+
+/* Per-item stagger baked into CSS so JS just sets play-state once */
+.nav-sequencing .nav-list__item:nth-child(1) .nav-link { animation-delay:   0ms; }
+.nav-sequencing .nav-list__item:nth-child(2) .nav-link { animation-delay:  60ms; }
+.nav-sequencing .nav-list__item:nth-child(3) .nav-link { animation-delay: 120ms; }
+.nav-sequencing .nav-list__item:nth-child(4) .nav-link { animation-delay: 180ms; }
+.nav-sequencing .nav-list__item:nth-child(5) .nav-link { animation-delay: 240ms; }
+
+.nav-sequencing .navbar__actions .btn--outline {
+  animation: nav-cta-enter 320ms ease-out both paused;
+}
+
+/* ─── Navbar ────────────────────────────────────────────────────── */
+/*
+  position: fixed here (not inside .hero) so CSS transform on .hero
+  during snap animation doesn't trap and move the navbar with it.
+*/
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 20;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.40)  0%,
+    rgba(0, 0, 0, 0.30) 50%,
+    rgba(0, 0, 0, 0.00) 100%
+  );
+  transition:
+    background 0.3s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* Solid state — shown when hero has snapped out */
+.navbar--solid {
+  background: var(--color-bg);
+  box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+}
+
+.navbar--solid .logo__text,
+.navbar--solid .nav-link {
+  color: var(--color-text);
+  transition: color 0.25s ease;
+}
+
+.navbar--solid .nav-toggle__bar {
+  background: var(--color-text);
+  transition: background 0.25s ease;
+}
+
+/* Outline btn on solid nav gets a lighter border */
+.navbar--solid .btn--outline {
+  border-color: rgba(40, 65, 107, 0.4);
+}
+
+.navbar__inner {
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: var(--pad-y-s) var(--pad-x-s);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 32px;
+}
+
+.navbar__nav {
+  display: flex;
+  align-items: center;
+}
+
+.navbar__actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+/* Logo — Syne text, fluid size */
+.logo {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  text-decoration: none;
+}
+
+.logo__text {
+  font-family: var(--font);
+  font-size: var(--logo-size);
+  font-weight: 700;
+  color: var(--color-white);
+  white-space: nowrap;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+/* Nav list */
+.nav-list {
+  display: flex;
+  align-items: center;
+  height: 48px;
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  height: 48px;
+  color: var(--color-white);
+  font-size: var(--text-small);
+  font-weight: 500;
+  letter-spacing: 0.015px;
+  line-height: 1.7;
+  white-space: nowrap;
+  transition: opacity 0.15s;
+}
+.nav-link:hover { opacity: 0.72; }
+
+.nav-link__caret { flex-shrink: 0; opacity: 0.9; }
+
+/* Hamburger — hidden on desktop */
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.nav-toggle__bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: #fff;
+  border-radius: 2px;
+}
+
+/* ─── Mobile  ≤ 767px ───────────────────────────────────────────── */
+@media (max-width: 767px) {
+
+  /* Show hamburger, hide desktop nav CTA */
+  .nav-toggle  { display: flex; }
+  .navbar__actions .btn--outline { display: none; }
+
+  /* Nav drawer */
+  .navbar__nav {
+    position: absolute;
+    top: calc(var(--logo-size) + var(--pad-y-s) * 2);
+    left: 0;
+    right: 0;
+    height: auto;
+    max-height: 0;
+    overflow: hidden;
+    background: rgba(10, 14, 20, 0.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: max-height 0.3s ease;
+  }
+
+  .navbar__nav.is-open {
+    max-height: 360px;
+  }
+
+  .nav-list {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    padding: 8px 20px 20px;
+  }
+
+  .nav-link {
+    padding: 14px 0;
+    height: auto;
+    font-size: var(--text-body);
+    width: 100%;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .nav-list__item:last-child .nav-link { border-bottom: none; }
+
+  /* Hero content — centered at bottom */
+  .hero__content {
+    left:  var(--pad-x-m);
+    right: var(--pad-x-m);
+    align-items: center;
+  }
+
+  .hero__text {
+    align-items: center;
+    text-align: center;
+  }
+
+  .hero__heading br { display: none; }
+
+  .hero__actions { justify-content: center; }
+}
+
+/* ─── Trust banner ─────────────────────────────────────────────── */
+.trust-banner {
+  background: rgba(33, 33, 33, 0.1);
+  padding: var(--pad-y-l) var(--pad-x-m);
+}
+
+.trust-banner__inner {
+  display: flex;
+  gap: 32px;
+  justify-content: space-between;
+}
+
+.trust-item {
+  flex: 1 0 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.trust-item__icon {
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+}
+
+.trust-item__label {
+  font-family: var(--font-body);
+  font-size: var(--text-subtitle);
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+  color: var(--color-primary);
+  text-align: center;
+}
+
+@media (max-width: 767px),
+       (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .trust-banner__inner {
+    flex-wrap: wrap;
+    gap: 24px 32px;
+  }
+  .trust-item {
+    flex: 1 0 calc(50% - 16px);
+    max-width: calc(50% - 16px);
+  }
+}
+
+/* ─── Visualizer block ──────────────────────────────────────────── */
+/*
+  Desktop: two columns.
+    Image — right, 50vw wide, 100vh tall, bleeds to right edge.
+    Text  — left, flex:1, sticky so it anchors to the top while the
+            tall image scrolls by.  Top offset clears the fixed navbar
+            (--navbar-h is set in JS and falls back to 130px).
+*/
+.viz-block {
+  display: flex;
+  align-items: flex-start;
+  background: var(--color-bg);
+  padding: var(--pad-y-l) 0; /* Y padding L on the section; X is handled per column */
+  /* No overflow:hidden here — it would trap position:sticky on the text column */
+}
+
+.viz-block__text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 0 var(--pad-x-s); /* X padding S only — Y comes from the section */
+  position: sticky;
+  top: calc(var(--navbar-h, 130px) + var(--pad-y-l));
+  align-self: flex-start;
+}
+
+.viz-block__heading {
+  font-size: var(--text-h3);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-text);
+}
+
+.viz-block__body {
+  font-size: var(--text-subtitle);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--color-text);
+  max-width: 38ch;
+}
+
+/* Green accent — from Figma node 9604:8870 */
+.btn--outline-green {
+  background: var(--color-bg);
+  color: var(--color-text);
+  border: 1px solid #465738;
+  border-radius: 8px;
+  align-self: flex-start;
+}
+
+.viz-block__image {
+  flex-shrink: 0;
+  width: 50vw;
+  height: 100vh;
+  padding: var(--pad-y-l) 0;
+  border-radius: 8px 0 0 8px;
+  overflow: hidden;
+  will-change: transform;
+}
+
+.viz-block__image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+/* Reversed variant — image left, text right */
+.viz-block--reversed {
+  flex-direction: row-reverse;
+}
+
+.viz-block--reversed .viz-block__image {
+  border-radius: 0 8px 8px 0;
+}
+
+/* Tablet portrait + mobile — stack vertically, image on top */
+/* Note: .viz-block { column-reverse } here overrides .viz-block--reversed { row-reverse }
+   above via later cascade position — no extra media query needed for the reversed variant. */
+@media (max-width: 767px),
+       (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+  .viz-block {
+    flex-direction: column-reverse;
+    gap: var(--pad-y-l);
+  }
+
+  .viz-block__text {
+    padding: 0 var(--pad-x-s);
+    position: static;
+    align-self: stretch;
+  }
+
+  .viz-block__image {
+    width: 100%;
+    height: 66vh;
+    border-radius: 0;
+  }
+
+  .btn--outline-green {
+    align-self: stretch;
+    justify-content: center;
+  }
+}
+
+/* ─── Dev: scroll test block ────────────────────────────────────── */
+.dev-spacer {
+  height: 100vh;
+  background: repeating-linear-gradient(
+    -45deg,
+    #f4f5f4 0px, #f4f5f4 4px,
+    #eaebea 4px, #eaebea 20px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dev-spacer span {
+  font-family: ui-monospace, 'SF Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  color: #bbb;
+  text-transform: uppercase;
+  background: rgba(255,255,255,0.7);
+  border: 1px solid #ddd;
+  padding: 8px 16px;
+  border-radius: 4px;
+}
+
+/* ─── Nav dropdowns ────────────────────────────────────────────── */
+.nav-list__item--has-dropdown { position: relative; }
+
+.nav-link__caret {
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+  flex-shrink: 0;
+}
+
+.nav-list__item--has-dropdown:hover .nav-link__caret,
+.nav-list__item--has-dropdown.is-open .nav-link__caret {
+  transform: rotate(180deg);
+}
+
+.nav-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 196px;
+  background: var(--color-bg);
+  border-radius: 8px;
+  box-shadow:
+    0 12px 40px rgba(12, 13, 14, 0.11),
+    0 2px 8px rgba(12, 13, 14, 0.05);
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition:
+    opacity 160ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10;
+}
+
+.nav-list__item--has-dropdown:hover .nav-dropdown,
+.nav-list__item--has-dropdown.is-open .nav-dropdown {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.nav-dropdown__list {
+  list-style: none;
+  padding: 6px 0;
+}
+
+.nav-dropdown__link {
+  display: block;
+  padding: 10px 20px;
+  font-family: var(--font-body);
+  font-size: var(--text-small);
+  font-weight: 400;
+  color: var(--color-text);
+  white-space: nowrap;
+  text-decoration: none;
+  transition: background 120ms ease-out, color 120ms ease-out;
+}
+
+.nav-dropdown__link:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+@media (max-width: 767px) {
+  .nav-dropdown { display: none; }
+}
+
+/* ─── Very small phones  ≤ 400px ────────────────────────────────── */
+@media (max-width: 400px) {
+  .hero__actions {
+    flex-direction: column;
+    width: 100%;
+  }
+  .hero__actions .btn { width: 100%; }
+}

@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keith's Flooring & Window Fashions — Abbey Gold</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&family=TASA+Orbiter:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* ─── Reset ─────────────────────────────────────────────────────── */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    ::selection {
+      background: var(--color-primary);
+      color: var(--color-accent-text);
+    }
+
+    /* ─── Design tokens ─────────────────────────────────────────────── */
+    :root {
+      --text-h1:       clamp(2rem,    1.12rem + 3.76vw, 4.5rem);
+      --text-h2:       clamp(1.5rem,  0.62rem + 3.76vw, 4rem);
+      --text-h3:       clamp(1.25rem, 0.63rem + 2.63vw, 3rem);
+      --text-h4:       clamp(1.125rem,0.64rem + 2.07vw, 2.5rem);
+      --text-subtitle: clamp(1rem,    0.96rem + 0.19vw, 1.125rem);
+      --text-body:     clamp(1rem,    0.96rem + 0.19vw, 1.125rem);
+      --text-small:    clamp(0.875rem,0.83rem + 0.19vw, 1rem);
+      --text-caption:  clamp(0.625rem,0.58rem + 0.19vw, 0.75rem);
+      --text-btn:      14px;
+      --logo-size:     clamp(1.5rem,  0.708rem + 3.38vw, 3.75rem);
+
+      --pad-x-s: 2.5vw;
+      --pad-x-m: 5vw;
+      --pad-x-l: 10vw;
+      --pad-y-s: 1.3vh;
+      --pad-y-m: 2.5vh;
+      --pad-y-l: 5vh;
+
+      --color-primary:      #334460;
+      --color-accent-text:  #E7FD9F;
+      --color-bg:      #FCFDFC;
+      --color-text:    #0C0D0E;
+      --color-white:   #FCFDFC;
+      --font:          'Syne', sans-serif;
+      --font-body:     'TASA Orbiter', sans-serif;
+    }
+
+    /* ─── Base ──────────────────────────────────────────────────────── */
+    html { font-size: 16px; }
+
+    body {
+      font-family: var(--font-body);
+      font-size: var(--text-body);
+      background: var(--color-bg);
+      color: var(--color-text);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Navbar reverts to gradient top-of-page look — only once viz-blocks have cleared */
+    body.ps-nav-mode .navbar--solid {
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.40)  0%,
+        rgba(0, 0, 0, 0.30) 50%,
+        rgba(0, 0, 0, 0.00) 100%
+      );
+      box-shadow: none;
+    }
+    body.ps-nav-mode .navbar--solid::before {
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+    }
+    body.ps-nav-mode .navbar--solid .logo__text,
+    body.ps-nav-mode .navbar--solid .nav-link {
+      color: var(--color-bg);
+    }
+    body.ps-nav-mode .navbar--solid .nav-toggle__bar {
+      background: var(--color-bg);
+    }
+    body.ps-nav-mode .navbar--solid .btn--outline {
+      color: var(--color-bg);
+      border-color: rgba(252, 253, 252, 0.50);
+      background: transparent;
+    }
+    body.ps-nav-mode .navbar--solid .btn--outline:hover {
+      background: rgba(252, 253, 252, 0.14);
+      border-color: rgba(252, 253, 252, 0.85);
+    }
+
+    img { display: block; max-width: 100%; }
+    ul  { list-style: none; }
+    a   { color: inherit; text-decoration: none; }
+
+    /* ─── Buttons ───────────────────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      height: 40px;
+      padding: 0 22px;
+      font-family: var(--font-body);
+      font-size: var(--text-btn);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      text-decoration: none;
+      cursor: pointer;
+      border: 1px solid transparent;
+      border-radius: 0;
+      transition:
+        background-color 180ms linear,
+        color            180ms linear,
+        border-color     180ms linear;
+    }
+
+    .btn--primary {
+      background: var(--color-text);
+      color: var(--color-bg);
+      border-color: var(--color-text);
+    }
+    .btn--primary:hover {
+      background: transparent;
+      color: var(--color-text);
+    }
+
+    .btn--outline {
+      background: transparent;
+      color: var(--color-text);
+      border-color: var(--color-text);
+    }
+    .btn--outline:hover {
+      background: var(--color-text);
+      color: var(--color-bg);
+    }
+
+    .btn--outline-green {
+      background: transparent;
+      color: var(--color-text);
+      border-color: #465738;
+      align-self: flex-start;
+    }
+    .btn--outline-green:hover {
+      background: #465738;
+      color: var(--color-bg);
+    }
+
+    /* ─── Hero ──────────────────────────────────────────────────────── */
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100svh;
+      min-height: 480px;
+      overflow: hidden;
+    }
+
+    .hero-spacer { display: none; }
+
+    @media (max-width: 767px),
+           (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+      .hero { height: 66svh; min-height: 320px; }
+    }
+
+    .hero__bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      pointer-events: none;
+      animation: hero-bg-settle 4000ms cubic-bezier(0.25, 0.1, 0.25, 1) both;
+    }
+
+    .hero__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.50)  0%,
+        rgba(0, 0, 0, 0.14) 47%,
+        rgba(0, 0, 0, 0.00) 72%
+      );
+      pointer-events: none;
+    }
+
+    .hero__content {
+      position: absolute;
+      bottom: var(--pad-y-l);
+      right:  var(--pad-x-m);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      align-items: flex-end;
+      animation: hero-enter 1600ms linear both paused;
+    }
+
+    .hero__text {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      align-items: flex-end;
+      text-align: right;
+      color: var(--color-white);
+    }
+
+    .hero__heading {
+      font-family: var(--font);
+      font-size: var(--text-h1);
+      font-weight: 400;
+      line-height: 1.05;
+      letter-spacing: -0.04em;
+      color: var(--color-white);
+    }
+
+    .hero__sub {
+      font-size: var(--text-subtitle);
+      font-weight: 500;
+      line-height: 1.7;
+      color: var(--color-white);
+    }
+
+    .hero__actions {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    /* Hero secondary button: ghost white on dark hero image */
+    .hero__actions .btn--outline {
+      color: var(--color-bg);
+      border-color: rgba(252, 253, 252, 0.50);
+      background: transparent;
+    }
+    .hero__actions .btn--outline:hover {
+      background: rgba(252, 253, 252, 0.14);
+      border-color: rgba(252, 253, 252, 0.85);
+      color: var(--color-bg);
+    }
+
+    @keyframes hero-enter {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    @keyframes hero-bg-settle {
+      from { transform: scale(1.05); }
+      to   { transform: scale(1); }
+    }
+
+    /* ─── Nav entrance sequence ─────────────────────────────────────── */
+    @keyframes nav-item-enter {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+    @keyframes nav-cta-enter {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    .nav-sequencing .logo {
+      animation: nav-item-enter 900ms linear both paused;
+    }
+
+    .nav-sequencing .nav-list__item .nav-link {
+      animation: nav-item-enter 900ms linear both paused;
+    }
+    .nav-sequencing .nav-list__item:nth-child(1) .nav-link { animation-delay: 280ms; }
+    .nav-sequencing .nav-list__item:nth-child(2) .nav-link { animation-delay: 420ms; }
+    .nav-sequencing .nav-list__item:nth-child(3) .nav-link { animation-delay: 560ms; }
+    .nav-sequencing .nav-list__item:nth-child(4) .nav-link { animation-delay: 700ms; }
+    .nav-sequencing .nav-list__item:nth-child(5) .nav-link { animation-delay: 840ms; }
+
+    .nav-sequencing .navbar__actions .btn--outline {
+      animation: nav-cta-enter 800ms linear both paused;
+    }
+
+    /* ─── Navbar ────────────────────────────────────────────────────── */
+    .navbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 20;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.40)  0%,
+        rgba(0, 0, 0, 0.30) 50%,
+        rgba(0, 0, 0, 0.00) 100%
+      );
+      transition: background 1.2s cubic-bezier(0.37, 0, 0.63, 1),
+                  box-shadow 1.2s cubic-bezier(0.37, 0, 0.63, 1),
+                  transform 900ms cubic-bezier(0.37, 0, 0.63, 1),
+                  opacity 900ms cubic-bezier(0.37, 0, 0.63, 1);
+      isolation: isolate;
+    }
+
+    .navbar--footer-hidden {
+      transform: translateY(-100%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Progressive backdrop blur — fades from full at top to zero at bottom */
+    .navbar::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      backdrop-filter: blur(18px) saturate(160%);
+      -webkit-backdrop-filter: blur(18px) saturate(160%);
+      mask-image: linear-gradient(to bottom, black 0%, black 45%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, black 0%, black 45%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* Solid state covers blur with opaque background */
+    .navbar--solid::before { backdrop-filter: none; -webkit-backdrop-filter: none; }
+
+    .navbar--solid {
+      background: var(--page-bg, var(--color-bg));
+      box-shadow: 0 1px 0 rgba(0, 0, 0, 0.08);
+    }
+
+    .navbar--solid .logo__text,
+    .navbar--solid .nav-link {
+      color: var(--color-text);
+      transition: color 1.2s cubic-bezier(0.37, 0, 0.63, 1);
+    }
+
+    .navbar--solid .nav-toggle__bar {
+      background: var(--color-text);
+      transition: background 1.2s cubic-bezier(0.37, 0, 0.63, 1);
+    }
+
+    /* Navbar CTA: light ghost on transparent/gradient navbar */
+    .navbar .btn--outline {
+      color: var(--color-bg);
+      border-color: rgba(252, 253, 252, 0.50);
+      background: transparent;
+    }
+    .navbar .btn--outline:hover {
+      background: rgba(252, 253, 252, 0.14);
+      border-color: rgba(252, 253, 252, 0.85);
+      color: var(--color-bg);
+    }
+
+    /* Solid navbar: flip to dark inversion */
+    .navbar--solid .btn--outline {
+      color: var(--color-text);
+      border-color: rgba(12, 13, 14, 0.30);
+      background: transparent;
+    }
+    .navbar--solid .btn--outline:hover {
+      background: var(--color-text);
+      color: var(--color-bg);
+      border-color: var(--color-text);
+    }
+
+    .navbar__inner {
+      max-width: 1600px;
+      margin: 0 auto;
+      padding: var(--pad-y-s) var(--pad-x-s);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .navbar__nav {
+      display: flex;
+      align-items: center;
+    }
+
+    .navbar__actions {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-shrink: 0;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      text-decoration: none;
+    }
+
+    .logo__text {
+      font-family: var(--font);
+      font-size: var(--logo-size);
+      font-weight: 700;
+      color: var(--color-white);
+      white-space: nowrap;
+      line-height: 1;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-list {
+      display: flex;
+      align-items: center;
+      height: 48px;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 10px;
+      height: 48px;
+      color: var(--color-white);
+      font-size: var(--text-small);
+      font-weight: 500;
+      letter-spacing: 0.015px;
+      line-height: 1.7;
+      white-space: nowrap;
+      transition: opacity 0.15s;
+    }
+    .nav-link:hover { opacity: 0.72; }
+    .nav-link__caret { flex-shrink: 0; opacity: 0.9; }
+
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      width: 40px;
+      height: 40px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      flex-shrink: 0;
+    }
+    .nav-toggle__bar {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+    }
+
+    /* ─── Mobile nav ≤ 767px ────────────────────────────────────────── */
+    @media (max-width: 767px) {
+      .nav-toggle  { display: flex; }
+      .navbar__actions .btn--outline { display: none; }
+
+      .navbar__nav {
+        position: absolute;
+        top: calc(var(--logo-size) + var(--pad-y-s) * 2);
+        left: 0; right: 0;
+        height: auto;
+        max-height: 0;
+        overflow: hidden;
+        background: rgba(10, 14, 20, 0.92);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        transition: max-height 0.3s ease;
+      }
+
+      .navbar__nav.is-open { max-height: 360px; }
+
+      .nav-list {
+        flex-direction: column;
+        align-items: flex-start;
+        height: auto;
+        padding: 8px 20px 20px;
+      }
+
+      .nav-link {
+        padding: 14px 0;
+        height: auto;
+        font-size: var(--text-body);
+        width: 100%;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      }
+      .nav-list__item:last-child .nav-link { border-bottom: none; }
+
+      .hero__content {
+        left:  var(--pad-x-m);
+        right: var(--pad-x-m);
+        align-items: center;
+      }
+
+      .hero__text { align-items: center; text-align: center; }
+      .hero__heading br { display: none; }
+      .hero__actions { justify-content: center; }
+    }
+
+    /* ─── Trust banner ─────────────────────────────────────────────── */
+    .trust-banner {
+      background: rgba(33, 33, 33, 0.1);
+      padding: var(--pad-y-l) var(--pad-x-m);
+    }
+
+    .trust-banner__inner {
+      display: flex;
+      gap: 32px;
+      justify-content: space-between;
+    }
+
+    .trust-item {
+      flex: 1 0 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .trust-item__icon {
+      width: 56px;
+      height: 56px;
+      flex-shrink: 0;
+      display: block;
+      color: var(--color-primary);
+    }
+
+    .trust-item__label {
+      font-family: var(--font-body);
+      font-size: var(--text-subtitle);
+      font-weight: 400;
+      line-height: 1.5;
+      letter-spacing: 0.01em;
+      color: var(--color-primary);
+      text-align: center;
+    }
+
+    @media (max-width: 767px),
+           (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+      .trust-banner__inner {
+        flex-wrap: wrap;
+        gap: 24px 32px;
+      }
+      .trust-item {
+        flex: 1 0 calc(50% - 16px);
+        max-width: calc(50% - 16px);
+      }
+    }
+
+    /* ─── Image + text blocks ───────────────────────────────────────── */
+    .viz-block {
+      display: flex;
+      align-items: flex-start;
+      padding: var(--pad-y-l) 0;
+    }
+
+    .viz-block__text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      padding: var(--pad-y-l) var(--pad-x-s) 0;
+      position: sticky;
+      top: calc(var(--navbar-h, 130px) + var(--pad-y-l));
+      align-self: flex-start;
+    }
+
+    .viz-block__heading {
+      font-family: var(--font);
+      font-size: var(--text-h3);
+      font-weight: 400;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--color-text);
+    }
+
+    .viz-block__body {
+      font-size: var(--text-subtitle);
+      font-weight: 400;
+      line-height: 1.5;
+      color: var(--color-text);
+      max-width: 38ch;
+    }
+
+    .viz-block__image {
+      flex-shrink: 0;
+      width: 50vw;
+      height: 100vh;
+      padding: var(--pad-y-l) 0;
+      border-radius: 8px 0 0 8px;
+      overflow: hidden;
+    }
+
+    .viz-block__image img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+    }
+
+    .viz-block--reversed { flex-direction: row-reverse; }
+    .viz-block--reversed .viz-block__image { border-radius: 0 8px 8px 0; }
+
+    @media (max-width: 767px),
+           (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+      .viz-block {
+        flex-direction: column-reverse;
+        gap: var(--pad-y-l);
+      }
+
+      .viz-block__text {
+        padding: 0 var(--pad-x-s);
+        position: static;
+        align-self: stretch;
+      }
+
+      .viz-block__image {
+        width: 100%;
+        height: 66vh;
+        border-radius: 0;
+      }
+
+      .btn--outline-green {
+        align-self: stretch;
+        justify-content: center;
+      }
+    }
+
+    /* ─── Inspiration Gallery ─────────────────────────────────────── */
+    .ig {
+      padding: clamp(60px, 8vh, 120px) var(--pad-x-s) 38vh;
+      overflow: visible;
+    }
+
+    .ig__header {
+      text-align: center;
+      margin-bottom: clamp(80px, 10vw, 140px);
+    }
+
+    .ig__title {
+      font-family: var(--font);
+      font-size: clamp(2.4rem, 4vw, 3.5rem);
+      font-weight: 400;
+      letter-spacing: -0.03em;
+      line-height: 1.05;
+      color: var(--color-text);
+      margin-bottom: 10px;
+    }
+
+    .ig__lead {
+      font-family: var(--font);
+      font-size: clamp(1rem, 1.6vw, 1.5rem);
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--color-text);
+      opacity: 0.55;
+      max-width: 44ch;
+      margin: 0 auto;
+    }
+
+    .ig__grid {
+      display: flex;
+      gap: clamp(12px, 1.5vw, 24px);
+      align-items: flex-start;
+    }
+
+    .ig__col {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(128px, 14vw, 224px);
+    }
+
+    .ig__col--1 { padding-top: clamp(60px, 10vw, 180px); }
+    .ig__col--2 { padding-top: 0; }
+    .ig__col--3 { padding-top: clamp(30px, 5vw, 90px); }
+
+    .ig__card {
+      position: relative;
+      overflow: hidden;
+      border-radius: 6px;
+      aspect-ratio: 3 / 4;
+      will-change: transform;
+    }
+
+    .ig__card img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      pointer-events: none;
+    }
+
+    @media (max-width: 767px) {
+      .ig__grid {
+        flex-direction: column;
+        gap: 16px;
+      }
+      .ig__col { flex-direction: row; gap: 10px; }
+      .ig__col--1,
+      .ig__col--2,
+      .ig__col--3 { padding-top: 0; }
+      .ig__card { border-radius: 4px; }
+    }
+
+    /* ─── Footer ────────────────────────────────────────────────────── */
+    .site-footer {
+      padding: 80px var(--pad-x-m);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .footer__inner {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .footer__logo {
+      display: flex;
+      justify-content: center;
+      margin-bottom: clamp(48px, 6vw, 80px);
+    }
+
+    .footer__logo-text {
+      font-family: var(--font);
+      font-size: clamp(2.8rem, 5vw, 5.5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1;
+      color: var(--color-text);
+    }
+
+    .footer__rule {
+      height: 1px;
+      background: rgba(12, 13, 14, 0.12);
+      margin-bottom: clamp(40px, 5vw, 64px);
+    }
+
+    .footer__nav {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+      margin-bottom: clamp(64px, 8vw, 100px);
+    }
+
+    .footer__col-title {
+      font-family: var(--font-body);
+      font-size: 10px;
+      font-weight: 400;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: rgba(12, 13, 14, 0.38);
+      margin-bottom: 18px;
+    }
+
+    .footer__nav-link {
+      display: block;
+      font-family: var(--font-body);
+      font-size: var(--text-small);
+      color: var(--color-text);
+      text-decoration: none;
+      line-height: 2.2;
+      opacity: 0.62;
+      transition: opacity 600ms cubic-bezier(0.37, 0, 0.63, 1);
+    }
+    .footer__nav-link:hover { opacity: 1; }
+
+    .footer__bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(12, 13, 14, 0.10);
+      padding-top: 24px;
+    }
+
+    .footer__copy {
+      font-family: var(--font-body);
+      font-size: var(--text-caption);
+      color: rgba(12, 13, 14, 0.38);
+      letter-spacing: 0.04em;
+    }
+
+    @media (max-width: 767px) {
+      .footer__nav { grid-template-columns: repeat(2, 1fr); gap: 32px; }
+      .footer__logo-text { font-size: clamp(2rem, 8vw, 3rem); }
+    }
+
+    /* ─── Product Showcase ─────────────────────────────────────────── */
+    .ps { position: relative; padding-top: 50vh; }
+
+    .ps__track { position: relative; /* height set by JS */ }
+
+    .ps__stage {
+      position: sticky;
+      top: 0;
+      height: 100svh;
+      overflow: hidden;
+    }
+    .ps__images {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 2000ms cubic-bezier(0.37, 0, 0.63, 1);
+    }
+    .ps__stage.is-revealed .ps__images { opacity: 1; }
+
+    .ps__img {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transform: scale(1.03);
+      will-change: opacity, transform;
+      transition: opacity 2000ms cubic-bezier(0.37, 0, 0.63, 1),
+                  transform 2000ms cubic-bezier(0.37, 0, 0.63, 1);
+    }
+    .ps__img:first-child,
+    .ps__img.is-active { opacity: 1; transform: scale(1); }
+
+    .ps__img img {
+      width: 100%; height: 100%;
+      object-fit: cover; display: block;
+    }
+
+    .ps__img--window {
+      background: linear-gradient(145deg, #5e7452 0%, #3e4f38 55%, #6e8460 100%);
+    }
+    .ps__img--window img { display: none; }
+
+    /* Bottom vignette on every image */
+    .ps__img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to top,
+        rgba(5,6,7,0.84) 0%,
+        rgba(5,6,7,0.28) 32%,
+        rgba(5,6,7,0.04) 58%,
+        transparent 100%
+      );
+      pointer-events: none;
+    }
+
+    /* Top-left label */
+    .ps__label {
+      position: absolute;
+      top: calc(var(--navbar-h, 64px) + 28px);
+      left: var(--pad-x-m);
+      z-index: 10;
+    }
+    .ps__eyebrow {
+      font-family: var(--font-body);
+      font-size: var(--text-small);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: rgba(252,253,252,0.42);
+    }
+
+    /* Bottom-left product content */
+    .ps__content {
+      position: absolute;
+      bottom: 0; left: 0;
+      z-index: 10;
+      padding: 0 var(--pad-x-m) calc(var(--pad-y-l) * 1.5);
+      max-width: min(600px, 58vw);
+    }
+
+    .ps__counter {
+      font-family: var(--font-body);
+      font-size: var(--text-caption);
+      letter-spacing: 0.14em;
+      color: rgba(252,253,252,0.38);
+      margin-bottom: 14px;
+    }
+
+    .ps__name {
+      font-family: var(--font);
+      font-size: clamp(4rem, 2.5rem + 6vw, 9rem);
+      font-weight: 400;
+      letter-spacing: -0.04em;
+      line-height: 0.88;
+      color: var(--color-bg);
+      white-space: nowrap;
+      transition: opacity 900ms cubic-bezier(0.37, 0, 0.63, 1);
+    }
+
+    .ps__blurb {
+      font-family: var(--font-body);
+      font-size: var(--text-subtitle);
+      color: rgba(252,253,252,0.65);
+      line-height: 1.5;
+      max-width: 42ch;
+      margin-top: 16px;
+      transition: opacity 900ms cubic-bezier(0.37, 0, 0.63, 1);
+    }
+
+    .ps__cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 22px;
+      height: 40px;
+      padding: 0 22px;
+      font-family: var(--font-body);
+      font-size: var(--text-btn);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+      white-space: nowrap;
+      color: var(--color-bg);
+      background: transparent;
+      border: 1px solid rgba(252,253,252,0.45);
+      border-radius: 0;
+      text-decoration: none;
+      cursor: pointer;
+      transition:
+        background-color 180ms linear,
+        color            180ms linear,
+        border-color     180ms linear;
+    }
+    .ps__cta:hover {
+      background: rgba(252,253,252,0.12);
+      border-color: rgba(252,253,252,0.85);
+    }
+
+    /* Vertical progress dots — right side */
+    .ps__dots {
+      display: flex;
+      flex-direction: row;
+      gap: 6px;
+    }
+    .ps__dot {
+      width: 20px; height: 2px;
+      background: rgba(252,253,252,0.2);
+      border: none; border-radius: 1px;
+      cursor: pointer; padding: 0;
+      transition:
+        width      700ms cubic-bezier(0.37, 0, 0.63, 1),
+        background 700ms cubic-bezier(0.37, 0, 0.63, 1);
+    }
+    .ps__dot.is-active { width: 44px; background: var(--color-accent-text); }
+
+    @media (max-width: 767px),
+           (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
+      .ps__content {
+        max-width: 86vw;
+        padding: 0 var(--pad-x-s) calc(var(--pad-y-l) * 2);
+      }
+      .ps__label  { left: var(--pad-x-s); }
+      .ps__dots   { display: none; }
+      .ps__name   { font-size: clamp(3rem, 9vw, 5rem); }
+    }
+
+    /* ─── Nav dropdowns ────────────────────────────────────────────── */
+    .nav-list__item--has-dropdown { position: relative; }
+
+    .nav-link__caret {
+      transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
+      flex-shrink: 0;
+    }
+
+    .nav-list__item--has-dropdown:hover .nav-link__caret,
+    .nav-list__item--has-dropdown.is-open .nav-link__caret {
+      transform: rotate(180deg);
+    }
+
+    .nav-dropdown {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 196px;
+      background: var(--color-bg);
+      border-radius: 8px;
+      box-shadow:
+        0 12px 40px rgba(12, 13, 14, 0.11),
+        0 2px 8px rgba(12, 13, 14, 0.05);
+      opacity: 0;
+      transform: translateY(-6px);
+      pointer-events: none;
+      transition:
+        opacity 160ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 160ms cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 10;
+    }
+
+    .nav-list__item--has-dropdown:hover .nav-dropdown,
+    .nav-list__item--has-dropdown.is-open .nav-dropdown {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .nav-dropdown__list {
+      list-style: none;
+      padding: 6px 0;
+    }
+
+    .nav-dropdown__link {
+      display: block;
+      padding: 10px 20px;
+      font-family: var(--font-body);
+      font-size: var(--text-small);
+      font-weight: 400;
+      color: var(--color-text);
+      white-space: nowrap;
+      text-decoration: none;
+      transition: background 120ms ease-out, color 120ms ease-out;
+    }
+
+    .nav-dropdown__link:hover {
+      background: rgba(0, 0, 0, 0.15);
+    }
+
+    @media (max-width: 767px) {
+      .nav-dropdown { display: none; }
+    }
+
+    /* ─── Very small phones ≤ 400px ─────────────────────────────────── */
+    @media (max-width: 400px) {
+      .hero__actions { flex-direction: column; width: 100%; }
+      .hero__actions .btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="navbar" id="navbar">
+    <script>
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.currentScript.parentElement.classList.add('nav-sequencing');
+      }
+    </script>
+    <div class="navbar__inner">
+
+      <a href="/" class="logo" aria-label="Keith's — home">
+        <span class="logo__text">Keith's</span>
+      </a>
+
+      <nav id="main-nav" class="navbar__nav" aria-label="Main navigation">
+        <ul class="nav-list">
+          <li class="nav-list__item nav-list__item--has-dropdown">
+            <a href="#flooring" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Flooring
+              <svg class="nav-link__caret" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <ul class="nav-dropdown" aria-label="Flooring">
+              <li><a href="#hardwood"   class="nav-dropdown__link">Hardwood</a></li>
+              <li><a href="#lvp"        class="nav-dropdown__link">Luxury Vinyl</a></li>
+              <li><a href="#carpet"     class="nav-dropdown__link">Carpet</a></li>
+              <li><a href="#tile"       class="nav-dropdown__link">Tile &amp; Stone</a></li>
+              <li><a href="#laminate"   class="nav-dropdown__link">Laminate</a></li>
+              <li><a href="#area-rugs"  class="nav-dropdown__link">Area Rugs</a></li>
+            </ul>
+          </li>
+          <li class="nav-list__item nav-list__item--has-dropdown">
+            <a href="#window-fashions" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Window Fashions
+              <svg class="nav-link__caret" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <ul class="nav-dropdown" aria-label="Window Fashions">
+              <li><a href="#blinds"     class="nav-dropdown__link">Blinds</a></li>
+              <li><a href="#shades"     class="nav-dropdown__link">Shades</a></li>
+              <li><a href="#shutters"   class="nav-dropdown__link">Shutters</a></li>
+              <li><a href="#drapery"    class="nav-dropdown__link">Drapery</a></li>
+              <li><a href="#motorized"  class="nav-dropdown__link">Motorized</a></li>
+            </ul>
+          </li>
+          <li class="nav-list__item nav-list__item--has-dropdown">
+            <a href="#why-abbey" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Why Keith's?
+              <svg class="nav-link__caret" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <ul class="nav-dropdown" aria-label="Why Keith's?">
+              <li><a href="#our-story"     class="nav-dropdown__link">Our Story</a></li>
+              <li><a href="#installers"    class="nav-dropdown__link">Expert Installers</a></li>
+              <li><a href="#guarantee"     class="nav-dropdown__link">Satisfaction Guarantee</a></li>
+              <li><a href="#reviews"       class="nav-dropdown__link">Customer Reviews</a></li>
+              <li><a href="#financing"     class="nav-dropdown__link">Financing Options</a></li>
+            </ul>
+          </li>
+          <li class="nav-list__item">
+            <a href="#visualizer" class="nav-link">Room Visualizer</a>
+          </li>
+          <li class="nav-list__item">
+            <a href="#financing" class="nav-link">Financing</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="navbar__actions">
+        <a href="#estimate" class="btn btn--outline">Free estimate</a>
+        <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="main-nav">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <section class="hero">
+    <img
+      class="hero__bg"
+      src="https://www.figma.com/api/mcp/asset/d8dde3ef-21b2-4bf5-89a0-3e8d8ef99a8c"
+      alt="Bright open kitchen with dark slate tile floors and modern cabinetry"
+    >
+    <div class="hero__overlay"></div>
+    <div class="hero__content">
+      <div class="hero__text">
+        <h1 class="hero__heading">
+          Every great room<br>
+          starts underfoot.
+        </h1>
+        <p class="hero__sub">Thousands of styles. Expert guidance. Locally owned and trusted since 1958.</p>
+      </div>
+      <div class="hero__actions">
+        <a href="#flooring" class="btn btn--primary">Explore flooring</a>
+        <a href="#find-store" class="btn btn--outline">Find a showroom</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="hero-spacer" aria-hidden="true"></div>
+
+  <section class="trust-banner">
+    <div class="trust-banner__inner">
+      <div class="trust-item">
+        <svg class="trust-item__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M207,44H49A13,13,0,0,0,36,57v49.21A13,13,0,0,0,43.62,118l70.72,32.14a44,44,0,1,0,27.32,0L212.38,118A13,13,0,0,0,220,106.21V57A13,13,0,0,0,207,44Zm-43,8v79.24l-36,16.37L92,131.24V52ZM44,106.21V57a5,5,0,0,1,5-5H84v75.61L46.93,110.76A5,5,0,0,1,44,106.21ZM164,192a36,36,0,1,1-36-36A36,36,0,0,1,164,192Zm48-85.79a5,5,0,0,1-2.93,4.55L172,127.61V52h35a5,5,0,0,1,5,5Z"/></svg>
+        <p class="trust-item__label">65+ years in business</p>
+      </div>
+      <div class="trust-item">
+        <svg class="trust-item__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,44H48A12,12,0,0,0,36,56v56c0,51.16,24.73,82.12,45.47,99.1,22.4,18.32,44.55,24.5,45.48,24.76a4,4,0,0,0,2.1,0c.93-.26,23.08-6.44,45.48-24.76,20.74-17,45.47-47.94,45.47-99.1V56A12,12,0,0,0,208,44Zm4,68c0,38.44-14.23,69.63-42.29,92.71A132.45,132.45,0,0,1,128,227.82a132.23,132.23,0,0,1-41.71-23.11C58.23,181.63,44,150.44,44,112V56a4,4,0,0,1,4-4H208a4,4,0,0,1,4,4Zm-41.17-10.83a4,4,0,0,1,0,5.66l-56,56a4,4,0,0,1-5.66,0l-24-24a4,4,0,0,1,5.66-5.66L112,154.34l53.17-53.17A4,4,0,0,1,170.83,101.17Z"/></svg>
+        <p class="trust-item__label">Lifetime warranty on select carpet</p>
+      </div>
+      <div class="trust-item">
+        <svg class="trust-item__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M208,36H180V24a4,4,0,0,0-8,0V36H84V24a4,4,0,0,0-8,0V36H48A12,12,0,0,0,36,48V208a12,12,0,0,0,12,12H208a12,12,0,0,0,12-12V48A12,12,0,0,0,208,36ZM48,44H76V56a4,4,0,0,0,8,0V44h88V56a4,4,0,0,0,8,0V44h28a4,4,0,0,1,4,4V84H44V48A4,4,0,0,1,48,44ZM208,212H48a4,4,0,0,1-4-4V92H212V208A4,4,0,0,1,208,212Zm-41.17-86.83a4,4,0,0,1,0,5.66l-48,48a4,4,0,0,1-5.66,0l-24-24a4,4,0,0,1,5.66-5.66L116,170.34l45.17-45.17A4,4,0,0,1,166.83,125.17Z"/></svg>
+        <p class="trust-item__label">60-day satisfaction guarantee</p>
+      </div>
+      <div class="trust-item">
+        <svg class="trust-item__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M240,212H220V126.34l9.17,9.17a4,4,0,1,0,5.66-5.66L136.49,31.51a12,12,0,0,0-17,0L21.17,129.85a4,4,0,1,0,5.66,5.66L36,126.34V212H16a4,4,0,0,0,0,8H240a4,4,0,0,0,0-8ZM44,118.34l81.17-81.17a4,4,0,0,1,5.66,0L212,118.34V212H156V152a4,4,0,0,0-4-4H104a4,4,0,0,0-4,4v60H44ZM148,212H108V156h40Z"/></svg>
+        <p class="trust-item__label">Free in-home estimates</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="viz-block">
+    <div class="viz-block__text">
+      <h2 class="viz-block__heading">See any floor in your room before you buy.</h2>
+      <p class="viz-block__body">Upload a photo of your space and instantly preview hundreds of styles — no store visit required.</p>
+      <a href="#visualizer" class="btn btn--outline-green">Try the room visualizer</a>
+    </div>
+    <div class="viz-block__image">
+      <img
+        src="https://www.figma.com/api/mcp/asset/d0938526-621a-4cec-aa86-ba54cca8e0de"
+        alt="Hand holding a phone showing a flooring preview in a living room using the room visualizer"
+      >
+    </div>
+  </section>
+
+  <section class="viz-block viz-block--reversed">
+    <div class="viz-block__text">
+      <h2 class="viz-block__heading">From first look to flawless install.</h2>
+      <p class="viz-block__body">Our specialists guide you through every choice. We measure, we source, and we install — backed by a full satisfaction guarantee.</p>
+      <a href="#estimate" class="btn btn--outline-green">Book a free estimate</a>
+    </div>
+    <div class="viz-block__image">
+      <img
+        src="https://www.figma.com/api/mcp/asset/d8dde3ef-21b2-4bf5-89a0-3e8d8ef99a8c"
+        alt="Bright kitchen with white cabinetry and dark hardwood floors"
+      >
+    </div>
+  </section>
+
+  <section class="ps" aria-label="Product types">
+    <div class="ps__track" id="psTrack">
+      <div class="ps__stage">
+
+        <div class="ps__images">
+          <div class="ps__img">
+            <img src="https://www.figma.com/api/mcp/asset/1cc4e0a5-8725-4879-b24a-211556fe57ae" alt="Carpet flooring — bedroom" loading="lazy">
+          </div>
+          <div class="ps__img">
+            <img src="https://www.figma.com/api/mcp/asset/887ae287-4457-43db-87c5-6693baff816b" alt="Hardwood flooring — living room" loading="lazy">
+          </div>
+          <div class="ps__img">
+            <img src="https://www.figma.com/api/mcp/asset/8c0f620a-ea36-47d3-bf14-490fc783bf23" alt="Luxury vinyl flooring — living room" loading="lazy">
+          </div>
+          <div class="ps__img">
+            <img src="https://www.figma.com/api/mcp/asset/46013bd2-2f8e-4d2d-8717-d2f2f56b89f2" alt="Tile and stone flooring — bathroom" loading="lazy">
+          </div>
+          <div class="ps__img">
+            <img src="https://www.figma.com/api/mcp/asset/1cc4e0a5-8725-4879-b24a-211556fe57ae" alt="Laminate flooring" loading="lazy">
+          </div>
+          <div class="ps__img">
+            <img src="https://www.figma.com/api/mcp/asset/887ae287-4457-43db-87c5-6693baff816b" alt="Area rugs — living room" loading="lazy">
+          </div>
+          <div class="ps__img ps__img--window">
+            <img src="" alt="" aria-hidden="true">
+          </div>
+        </div>
+
+        <div class="ps__label">
+          <span class="ps__eyebrow">What we carry</span>
+        </div>
+
+        <div class="ps__content">
+          <p class="ps__counter" id="psCounter">01 / 07</p>
+          <div class="ps__dots" id="psDots" aria-hidden="true">
+            <button class="ps__dot is-active" tabindex="-1"></button>
+            <button class="ps__dot" tabindex="-1"></button>
+            <button class="ps__dot" tabindex="-1"></button>
+            <button class="ps__dot" tabindex="-1"></button>
+            <button class="ps__dot" tabindex="-1"></button>
+            <button class="ps__dot" tabindex="-1"></button>
+            <button class="ps__dot" tabindex="-1"></button>
+          </div>
+          <h2 class="ps__name" id="psName">Hardwood</h2>
+          <p class="ps__blurb" id="psBlurb">Timeless beauty that gets better with age. From classic oak to rich walnut, our hardwood collection brings enduring warmth to any space.</p>
+          <a href="#hardwood" class="ps__cta" id="psCta">Explore Hardwood &rarr;</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <section class="ig" aria-label="Inspiration gallery">
+    <div class="ig__header">
+      <h2 class="ig__title">Get inspired.</h2>
+      <p class="ig__lead">Browse real rooms, find your style, then shop the floors that make them.</p>
+    </div>
+    <div class="ig__grid">
+      <div class="ig__col ig__col--1">
+        <div class="ig__card" data-ig-speed="0.10">
+          <img src="https://www.figma.com/api/mcp/asset/004453ea-e7c9-4bdf-97a0-ab0f00336e62" alt="Living room with warm rug and wood floors" loading="lazy">
+        </div>
+        <div class="ig__card" data-ig-speed="0.14">
+          <img src="https://www.figma.com/api/mcp/asset/4559c787-bc78-4869-994d-f5e0a6344e9c" alt="Colourful checkerboard tile floor with plants" loading="lazy">
+        </div>
+      </div>
+      <div class="ig__col ig__col--2">
+        <div class="ig__card" data-ig-speed="0.25">
+          <img src="https://www.figma.com/api/mcp/asset/b6971f4b-e1ee-419a-88cf-4b442b2bd875" alt="Modern dining space with dark hardwood floors" loading="lazy">
+        </div>
+        <div class="ig__card" data-ig-speed="0.20">
+          <img src="https://www.figma.com/api/mcp/asset/68a2b66d-47e3-4cd4-978a-9f79f622c04f" alt="Living room with red velvet sofa and warm wood floors" loading="lazy">
+        </div>
+      </div>
+      <div class="ig__col ig__col--3">
+        <div class="ig__card" data-ig-speed="0.16">
+          <img src="https://www.figma.com/api/mcp/asset/afae7633-fb5a-4a56-b58c-08787afb29d3" alt="Soft carpet texture close-up" loading="lazy">
+        </div>
+        <div class="ig__card" data-ig-speed="0.30">
+          <img src="https://www.figma.com/api/mcp/asset/a7343c52-975b-47e6-96b2-2092bdb62210" alt="Kitchen with sage green cabinets and light hardwood floors" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Cinematic page-load orchestration: hero content → nav (concurrent, staggered)
+    (function () {
+      const img      = document.querySelector('.hero__bg');
+      const content  = document.querySelector('.hero__content');
+      const logo     = document.querySelector('.logo');
+      const navLinks = document.querySelectorAll('.nav-list__item .nav-link');
+      const navCta   = document.querySelector('.navbar__actions .btn--outline');
+
+      const reveal = () => {
+        content.style.animationPlayState = 'running';
+        // CSS animations sit above the author cascade and override inline styles.
+        // Once the entrance finishes, clear the animation so the scroll-exit fade
+        // can freely drive opacity via content.style.opacity.
+        content.addEventListener('animationend', () => {
+          content.style.animation = 'none';
+          content.style.opacity   = '1';
+        }, { once: true });
+        setTimeout(() => {
+          logo.style.animationPlayState = 'running';
+          navLinks.forEach(link => { link.style.animationPlayState = 'running'; });
+          setTimeout(() => { navCta.style.animationPlayState = 'running'; }, 750);
+        }, 500);
+      };
+
+      if (img.complete && img.naturalWidth > 0) { reveal(); }
+      else {
+        img.addEventListener('load',  reveal, { once: true });
+        img.addEventListener('error', reveal, { once: true });
+      }
+    })();
+
+    // Track navbar height for sticky offset
+    (function () {
+      const navbar  = document.getElementById('navbar');
+      const setNavH = () => document.documentElement.style.setProperty('--navbar-h', navbar.offsetHeight + 'px');
+      setNavH();
+      window.addEventListener('resize', setNavH, { passive: true });
+    })();
+
+    // Mobile nav toggle
+    const toggle = document.querySelector('.nav-toggle');
+    const nav    = document.getElementById('main-nav');
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!open));
+      nav.classList.toggle('is-open', !open);
+    });
+
+
+    // Nav dropdown toggle (click / keyboard)
+    (function () {
+      const items = document.querySelectorAll('.nav-list__item--has-dropdown');
+
+      function closeAll(except) {
+        items.forEach(item => {
+          if (item === except) return;
+          item.classList.remove('is-open');
+          item.querySelector('.nav-link').setAttribute('aria-expanded', 'false');
+        });
+      }
+
+      items.forEach(item => {
+        const trigger = item.querySelector('.nav-link');
+        trigger.addEventListener('click', e => {
+          e.preventDefault();
+          const opening = !item.classList.contains('is-open');
+          closeAll(item);
+          item.classList.toggle('is-open', opening);
+          trigger.setAttribute('aria-expanded', String(opening));
+        });
+      });
+
+      document.addEventListener('click', e => {
+        if (!e.target.closest('.nav-list__item--has-dropdown')) closeAll();
+      });
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeAll();
+      });
+    })();
+
+    // Polestar-style scroll reveals: pure opacity + image settles from slight zoom
+    (function () {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      // Trust items: sequential opacity dissolve — no movement, just light and time
+      const trustBanner = document.querySelector('.trust-banner');
+      const trustItems  = Array.from(document.querySelectorAll('.trust-item'));
+      const SINE = 'cubic-bezier(0.37, 0, 0.63, 1)';
+
+      if (trustBanner && trustItems.length) {
+        trustItems.forEach(item => {
+          item.style.opacity    = '0';
+          item.style.transition = `opacity 2000ms ${SINE}`;
+        });
+        new IntersectionObserver((entries, obs) => {
+          if (!entries[0].isIntersecting) return;
+          trustItems.forEach((item, i) => {
+            setTimeout(() => { item.style.opacity = '1'; }, i * 400);
+          });
+          obs.disconnect();
+        }, { threshold: 0.1 }).observe(trustBanner);
+      }
+
+      // Viz-block images: opacity dissolve, inner image settles from slight zoom
+      document.querySelectorAll('.viz-block__image').forEach(container => {
+        const img = container.querySelector('img');
+        container.style.opacity    = '0';
+        container.style.transition = `opacity 2400ms ${SINE}`;
+        if (img) {
+          img.style.transform  = 'scale(1.05)';
+          img.style.transition = `transform 3500ms ${SINE}`;
+        }
+        new IntersectionObserver((entries, obs) => {
+          if (!entries[0].isIntersecting) return;
+          container.style.opacity = '1';
+          if (img) img.style.transform = 'scale(1)';
+          obs.disconnect();
+        }, { threshold: 0, rootMargin: '0px 0px -20% 0px' }).observe(container);
+      });
+
+      // Viz-block text: pure opacity dissolve
+      document.querySelectorAll('.viz-block__text').forEach(el => {
+        el.style.opacity    = '0';
+        el.style.transition = `opacity 2000ms ${SINE}`;
+        new IntersectionObserver((entries, obs) => {
+          if (!entries[0].isIntersecting) return;
+          el.style.opacity = '1';
+          obs.disconnect();
+        }, { threshold: 0, rootMargin: '0px 0px -20% 0px' }).observe(el);
+      });
+
+      // Gallery cards: same opacity dissolve + image scale settle, staggered by column
+      document.querySelectorAll('.ig__card').forEach((card, i) => {
+        const img = card.querySelector('img');
+        card.style.opacity    = '0';
+        card.style.transition = `opacity 2400ms ${SINE}`;
+        if (img) {
+          img.style.transform  = 'scale(1.05)';
+          img.style.transition = `transform 3500ms ${SINE}`;
+        }
+        new IntersectionObserver((entries, obs) => {
+          if (!entries[0].isIntersecting) return;
+          setTimeout(() => {
+            card.style.opacity = '1';
+            if (img) img.style.transform = 'scale(1)';
+            card.addEventListener('transitionend', () => {
+              card.style.transition = '';
+            }, { once: true });
+          }, (i % 3) * 200);
+          obs.disconnect();
+        }, { threshold: 0, rootMargin: '0px 0px -20% 0px' }).observe(card);
+      });
+    })();
+
+    // Hero: content fade out as it exits viewport + navbar solid state
+    (function () {
+      const hero    = document.querySelector('.hero');
+      const content = document.querySelector('.hero__content');
+      const navbar  = document.getElementById('navbar');
+      let   raf     = null;
+
+      function update() {
+        const scrollY = window.scrollY;
+        navbar.classList.toggle('navbar--solid', scrollY > hero.offsetHeight * 0.85);
+
+        if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          const bottom   = content.getBoundingClientRect().bottom;
+          const fadeOver = window.innerHeight * 0.65;
+          if (bottom <= fadeOver) {
+            const p = Math.min(1 - bottom / fadeOver, 1);
+            content.style.opacity = String(+(1 - p).toFixed(4));
+          } else {
+            content.style.opacity = '';
+          }
+        }
+      }
+
+      update();
+      window.addEventListener('scroll', () => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => { raf = null; update(); });
+      }, { passive: true });
+    })();
+
+    // Trust banner + viz-blocks: delayed catch-up scroll + padding shrink
+    // Merged into one rAF so getBoundingClientRect reads the freshly-set transform
+    (function () {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const banner       = document.querySelector('.trust-banner');
+      const bannerInner  = document.querySelector('.trust-banner__inner');
+      const hero         = document.querySelector('.hero');
+      const vizBlocks    = Array.from(document.querySelectorAll('.viz-block'));
+      const igCards      = Array.from(document.querySelectorAll('.ig__card'));
+      const psExitEls    = Array.from(document.querySelectorAll('.ps__content, .ps__label'));
+      if (!banner || !hero) return;
+
+      // Golden-ratio padding: settled = icon height × φ, entering = settled × φ
+      const PHI    = 1.618;
+      const icon   = banner.querySelector('.trust-item__icon');
+      const iconH  = (icon && icon.offsetHeight > 0) ? icon.offsetHeight : 56;
+      const padMin = iconH * PHI;         // ~90.6px — settled state
+      const padMax = padMin * PHI;        // ~146.5px — entering state
+
+      function update() {
+        const vh     = window.innerHeight;
+        const catch_ = hero.offsetHeight * 0.65;
+        const offset = vh * 0.45;
+        const t      = Math.max(0, 1 - window.scrollY / catch_);
+        const ty     = (offset * t).toFixed(2);
+
+        // Banner slides down via transform (GPU); margin-top on first viz-block
+        // closes the gap without breaking position:sticky on viz-block__text
+        banner.style.transform = `translateY(${ty}px)`;
+        if (vizBlocks[0]) vizBlocks[0].style.marginTop = ty + 'px';
+
+        // Padding shrink + exit fade — both read rect AFTER transform (forces layout)
+        const rect          = banner.getBoundingClientRect();
+        const bannerCenterY = rect.top + rect.height / 2;
+        const progress      = Math.min(Math.max(1 - (bannerCenterY - vh / 2) / (vh / 2), 0), 1);
+        const padValue      = padMax + (padMin - padMax) * progress;
+        banner.style.paddingTop    = padValue + 'px';
+        banner.style.paddingBottom = padValue + 'px';
+
+        if (bannerInner) {
+          const fadeOver = vh * 0.55;
+          if (rect.bottom <= fadeOver) {
+            const p = Math.min(1 - rect.bottom / fadeOver, 1);
+            bannerInner.style.opacity = String(+(1 - p).toFixed(4));
+          } else {
+            bannerInner.style.opacity = '';
+          }
+        }
+
+        const fadeOver = vh * 0.55;
+        vizBlocks.forEach(block => {
+          const br = block.getBoundingClientRect();
+          if (br.bottom <= fadeOver) {
+            const p = Math.min(1 - br.bottom / fadeOver, 1);
+            block.style.opacity = String(+(1 - p).toFixed(4));
+          } else {
+            block.style.opacity = '';
+          }
+        });
+
+        // Product text/button exit fade: same hero formula
+        psExitEls.forEach(el => {
+          const br = el.getBoundingClientRect();
+          if (br.bottom <= fadeOver) {
+            const p = Math.min(1 - br.bottom / fadeOver, 1);
+            el.style.opacity = String(+(1 - p).toFixed(4));
+          } else {
+            el.style.opacity = '';
+          }
+        });
+
+        // Gallery card exit fade + acceleration boost
+        igCards.forEach(card => {
+          const br = card.getBoundingClientRect();
+          if (br.bottom <= fadeOver) {
+            const p = Math.min(1 - br.bottom / fadeOver, 1);
+            card.style.opacity = String(+(1 - p).toFixed(4));
+            card._exitBoost = p * p * vh * 0.28; // ease-in acceleration upward
+          } else {
+            if (card.style.opacity !== '0') card.style.opacity = '';
+            card._exitBoost = 0;
+          }
+        });
+      }
+
+      update();
+      let raf = null;
+      window.addEventListener('scroll', () => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => { raf = null; update(); });
+      }, { passive: true });
+      window.addEventListener('resize', update, { passive: true });
+    })();
+
+    // Product showcase: full-screen scroll-driven reveal
+    (function () {
+      const track   = document.getElementById('psTrack');
+      const nameEl  = document.getElementById('psName');
+      const blurbEl = document.getElementById('psBlurb');
+      const ctaEl   = document.getElementById('psCta');
+      const counter = document.getElementById('psCounter');
+      const dots    = Array.from(document.querySelectorAll('#psDots .ps__dot'));
+      const images  = Array.from(document.querySelectorAll('.ps__img'));
+      if (!track || !images.length) return;
+
+      const products = [
+        {
+          name:  'Hardwood',
+          blurb: 'Timeless beauty that gets better with age. From classic oak to rich walnut, our hardwood collection brings enduring warmth to any space.',
+          href:  '#hardwood',
+          cta:   'Explore Hardwood',
+        },
+        {
+          name:  'Luxury Vinyl',
+          blurb: 'Looks like wood. Laughs at spills. Built for busy households and active lives — without sacrificing a single inch of style.',
+          href:  '#luxury-vinyl',
+          cta:   'Explore Luxury Vinyl',
+        },
+        {
+          name:  'Carpet',
+          blurb: 'Where bare feet want to be. Soft underfoot and quiet in every room — our carpet selection brings comfort and texture to the spaces you love most.',
+          href:  '#carpet',
+          cta:   'Explore Carpet',
+        },
+        {
+          name:  'Tile & Stone',
+          blurb: 'Cool, clean, and made to last forever. Natural stone and precision-cut tile for kitchens, bathrooms, and every surface in between.',
+          href:  '#tile',
+          cta:   'Explore Tile & Stone',
+        },
+        {
+          name:  'Laminate',
+          blurb: 'All the look. None of the upkeep. Realistic wood and stone visuals in a surface that\'s scratch-resistant, easy to clean, and built for real life.',
+          href:  '#laminate',
+          cta:   'Explore Laminate',
+        },
+        {
+          name:  'Area Rugs',
+          blurb: 'The fastest way to transform any room. Define a space, anchor a seating area, or layer in texture — our curated rug collection does it all.',
+          href:  '#area-rugs',
+          cta:   'Explore Area Rugs',
+        },
+        {
+          name:  'Window Fashions',
+          blurb: 'Light, privacy, and beauty — on your terms. From motorized shades to custom drapery, we outfit every window with the same care we give every floor.',
+          href:  '#window-fashions',
+          cta:   'Explore Window Fashions',
+        },
+      ];
+
+      const N = products.length;
+      let activeIdx = -1;
+
+      // Reduced motion: show all images statically, no transforms
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        images.forEach(img => img.classList.add('is-active'));
+        setContent(0);
+        return;
+      }
+
+      const scrollStep = () => window.innerHeight * 0.50;
+
+      function setHeight() {
+        track.style.height = (window.innerHeight + (N - 1) * scrollStep()) + 'px';
+      }
+      setHeight();
+      window.addEventListener('resize', setHeight, { passive: true });
+
+      function setContent(idx) {
+        if (idx === activeIdx) return;
+        activeIdx = idx;
+        const p = products[idx];
+        nameEl.style.opacity  = '0';
+        blurbEl.style.opacity = '0';
+        ctaEl.style.opacity   = '0';
+        setTimeout(() => {
+          nameEl.textContent  = p.name;
+          blurbEl.textContent = p.blurb;
+          ctaEl.textContent   = p.cta + ' →';
+          ctaEl.href          = p.href;
+          counter.textContent =
+            String(idx + 1).padStart(2, '0') + ' / ' + String(N).padStart(2, '0');
+          nameEl.style.opacity  = '1';
+          blurbEl.style.opacity = '1';
+          ctaEl.style.opacity   = '1';
+        }, 700);
+        dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
+      }
+
+      // Queued transition engine: images step one at a time regardless of scroll speed
+      let displayedIdx  = 0;
+      let transitioning = false;
+      let latestScrolled = 0;
+      let raf = null;
+
+      function targetFromScrolled(s) {
+        const step = scrollStep();
+        for (let i = N - 1; i >= 1; i--) {
+          if (s >= (i - 0.5) * step) return i;
+        }
+        return 0;
+      }
+
+      function applyDisplay(idx) {
+        images.forEach((img, i) => {
+          if (i === 0) return;
+          img.classList.toggle('is-active', i <= idx);
+        });
+        setContent(idx);
+        displayedIdx = idx;
+      }
+
+      function advanceOne() {
+        const target = targetFromScrolled(latestScrolled);
+        if (target === displayedIdx) { transitioning = false; return; }
+        transitioning = true;
+        const next = target > displayedIdx ? displayedIdx + 1 : displayedIdx - 1;
+        applyDisplay(next);
+        // wait for CSS transition to finish before allowing next step
+        setTimeout(advanceOne, 2100);
+      }
+
+      function update() {
+        const scrolled = -track.getBoundingClientRect().top;
+        latestScrolled = Math.max(scrolled, 0);
+        if (!transitioning) advanceOne();
+      }
+
+      window.addEventListener('scroll', () => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => { raf = null; update(); });
+      }, { passive: true });
+
+      dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => {
+          let el = track, top = 0;
+          while (el) { top += el.offsetTop; el = el.offsetParent; }
+          window.scrollTo({ top: top + i * scrollStep(), behavior: 'smooth' });
+        });
+      });
+
+      // Fade in stage when section is 20% above the viewport bottom
+      const stage = document.querySelector('.ps__stage');
+      const psEl  = document.querySelector('.ps');
+
+      // Prime first image for scale settle
+      const firstPsImg = stage ? stage.querySelector('.ps__img:first-child img') : null;
+      if (firstPsImg) {
+        firstPsImg.style.transform  = 'scale(1.05)';
+        firstPsImg.style.transition = 'transform 3500ms cubic-bezier(0.37, 0, 0.63, 1)';
+      }
+
+      new IntersectionObserver((entries) => {
+        if (!entries[0].isIntersecting) return;
+        stage.classList.add('is-revealed');
+        if (firstPsImg) firstPsImg.style.transform = 'scale(1)';
+      }, { rootMargin: '0px 0px -20% 0px', threshold: 0 }).observe(track);
+
+      // ps-nav-mode is now controlled by the bg IIFE based on tDark
+
+      update();
+    })();
+
+    // Scroll-driven background: light→dark as viz-block leaves, dark→light before .ig enters
+    (function () {
+      const darkTrigger  = document.querySelector('.viz-block--reversed');
+      const lightTrigger = document.querySelector('.ig');
+      const igCards      = Array.from(document.querySelectorAll('.ig__card'));
+      if (!darkTrigger || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      const bgLight  = [252, 253, 252];
+      const bgDark   = [12,  13,  14];
+      const bgAccent = [231, 253, 159]; // #E7FD9F — product progress dot accent
+
+      function sineInOut(t) { return 0.5 - 0.5 * Math.cos(t * Math.PI); }
+      function lerp(a, b, t) {
+        return [
+          Math.round(a[0] + (b[0] - a[0]) * t),
+          Math.round(a[1] + (b[1] - a[1]) * t),
+          Math.round(a[2] + (b[2] - a[2]) * t),
+        ];
+      }
+
+      let raf = null;
+      function update() {
+        raf = null;
+        const vh = window.innerHeight;
+
+        // Dark: drifts in over 50% vh after viz-block fully exits — cinematic, unhurried
+        const rd = darkTrigger.getBoundingClientRect();
+        const tDark = sineInOut(Math.min(Math.max(-rd.bottom / (vh * 0.50), 0), 1));
+
+        // Light: gradual return over 1.5 viewports as gallery approaches
+        // Accent: bg shifts to lime as we scroll into the 38vh padding zone above footer
+        let tLight = 0;
+        let tAccent = 0;
+        if (lightTrigger) {
+          const rl = lightTrigger.getBoundingClientRect();
+          tLight = sineInOut(Math.min(Math.max((vh * 1.5 - rl.top) / (vh * 1.5), 0), 1));
+          const igPadH = parseFloat(getComputedStyle(lightTrigger).paddingBottom);
+          const maxCardBottom = igCards.length
+            ? Math.max(...igCards.map(c => c.getBoundingClientRect().bottom))
+            : rl.bottom - igPadH;
+          const accentOffset = igPadH * 0.15;
+          if (maxCardBottom < accentOffset) {
+            tAccent = sineInOut(Math.min((accentOffset - maxCardBottom) / igPadH, 1));
+          }
+        }
+
+        let rgb;
+        if (tAccent > 0) {
+          rgb = lerp(bgLight, bgAccent, tAccent);
+        } else if (tLight > 0) {
+          rgb = lerp(bgDark, bgLight, tLight);
+        } else {
+          rgb = lerp(bgLight, bgDark, tDark);
+        }
+        const rgbStr = `rgb(${rgb[0]},${rgb[1]},${rgb[2]})`;
+        document.body.style.backgroundColor = rgbStr;
+        document.documentElement.style.setProperty('--page-bg', rgbStr);
+
+        // Navbar goes transparent in sync with background darkening; returns solid when gallery enters
+        const igInView = lightTrigger && lightTrigger.getBoundingClientRect().top < vh;
+        document.body.classList.toggle('ps-nav-mode', tDark > 0.5 && !igInView);
+
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!raf) raf = requestAnimationFrame(() => { raf = null; update(); });
+      }, { passive: true });
+
+      update();
+    })();
+
+    // Hide navbar when footer reaches 50% visibility
+    (function () {
+      const navbar = document.getElementById('navbar');
+      const footer = document.getElementById('siteFooter');
+      if (!navbar || !footer) return;
+      new IntersectionObserver(([entry]) => {
+        navbar.classList.toggle('navbar--footer-hidden', entry.intersectionRatio >= 0.5);
+      }, { threshold: [0, 0.5, 1] }).observe(footer);
+    })();
+
+    // Inspiration gallery: per-card parallax at varied scroll speeds
+    (function () {
+      const section = document.querySelector('.ig');
+      if (!section || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      const cards = Array.from(section.querySelectorAll('.ig__card'));
+      if (!cards.length) return;
+
+      let rafId = null;
+
+      function tick() {
+        rafId = null;
+        const vh = window.innerHeight;
+        cards.forEach(card => {
+          const speed = parseFloat(card.dataset.igSpeed) || 0.1;
+          const rect  = card.getBoundingClientRect();
+          const center = rect.top + rect.height / 2 - vh / 2;
+          const boost  = card._exitBoost || 0;
+          card.style.transform = `translateY(${(center * -speed) - boost}px)`;
+        });
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!rafId) rafId = requestAnimationFrame(tick);
+      }, { passive: true });
+
+      tick();
+    })();
+  </script>
+
+  <footer class="site-footer" id="siteFooter">
+  <div class="footer__inner">
+    <div class="footer__logo">
+      <span class="footer__logo-text">Keith's</span>
+    </div>
+    <div class="footer__rule"></div>
+    <nav class="footer__nav" aria-label="Footer navigation">
+      <div>
+        <p class="footer__col-title">Flooring</p>
+        <a href="#hardwood"     class="footer__nav-link">Hardwood</a>
+        <a href="#luxury-vinyl" class="footer__nav-link">Luxury Vinyl</a>
+        <a href="#carpet"       class="footer__nav-link">Carpet</a>
+        <a href="#tile"         class="footer__nav-link">Tile &amp; Stone</a>
+        <a href="#laminate"     class="footer__nav-link">Laminate</a>
+      </div>
+      <div>
+        <p class="footer__col-title">Window Fashions</p>
+        <a href="#area-rugs"        class="footer__nav-link">Area Rugs</a>
+        <a href="#window-fashions"  class="footer__nav-link">Window Fashions</a>
+        <a href="#blinds"           class="footer__nav-link">Blinds &amp; Shades</a>
+        <a href="#drapery"          class="footer__nav-link">Custom Drapery</a>
+      </div>
+      <div>
+        <p class="footer__col-title">Company</p>
+        <a href="#why-keiths"      class="footer__nav-link">Why Keith's?</a>
+        <a href="#financing"       class="footer__nav-link">Financing</a>
+        <a href="#room-visualizer" class="footer__nav-link">Room Visualizer</a>
+        <a href="#estimate"        class="footer__nav-link">Free Estimate</a>
+      </div>
+      <div>
+        <p class="footer__col-title">Connect</p>
+        <a href="#showrooms" class="footer__nav-link">Showrooms</a>
+        <a href="#instagram"  class="footer__nav-link">Instagram</a>
+        <a href="#facebook"   class="footer__nav-link">Facebook</a>
+        <a href="#contact"    class="footer__nav-link">Contact Us</a>
+      </div>
+    </nav>
+    <div class="footer__bottom">
+      <p class="footer__copy">&copy; 2024 Keith's Flooring &amp; Window Fashions. All rights reserved.</p>
+      <p class="footer__copy">Locally owned since 1958.</p>
+    </div>
+  </div>
+  </footer>
+
+  <script>
+    // Footer content reveal: same opacity dissolve as viz-block text, staggered by column
+    (function () {
+      const SINE = 'cubic-bezier(0.37, 0, 0.63, 1)';
+      const footer = document.getElementById('siteFooter');
+      if (!footer) return;
+      const logo   = footer.querySelector('.footer__logo');
+      const rule   = footer.querySelector('.footer__rule');
+      const cols   = Array.from(footer.querySelectorAll('.footer__nav > div'));
+      const bottom = footer.querySelector('.footer__bottom');
+      const els = [logo, rule, ...cols, bottom].filter(Boolean);
+      els.forEach(el => {
+        el.style.opacity    = '0';
+        el.style.transition = `opacity 2000ms ${SINE}`;
+      });
+      new IntersectionObserver((entries, obs) => {
+        if (!entries[0].isIntersecting) return;
+        els.forEach((el, i) => {
+          setTimeout(() => { el.style.opacity = '1'; }, i * 140);
+        });
+        obs.disconnect();
+      }, { threshold: 0, rootMargin: '0px 0px -10% 0px' }).observe(footer);
+    })();
+
+    (function () {
+      const footer = document.getElementById('siteFooter');
+      const inner  = footer && footer.querySelector('.footer__inner');
+      if (!footer || !inner) return;
+
+      const PAD_MIN = 80;
+      let raf = null;
+
+      function update() {
+        raf = null;
+        const vh      = window.innerHeight;
+        const docH    = document.documentElement.scrollHeight;
+        const remaining = docH - window.scrollY - vh;
+        const t = Math.max(0, Math.min(1, 1 - remaining / (vh * 0.6)));
+
+        // At t=1 footer fills exactly 100vh: pad = (vh - innerH) / 2
+        const innerH  = inner.offsetHeight;
+        const padMax  = Math.max(PAD_MIN, (vh * 0.62 - innerH) / 2);
+        const pad     = (PAD_MIN + (padMax - PAD_MIN) * t).toFixed(1);
+        footer.style.paddingTop    = pad + 'px';
+        footer.style.paddingBottom = pad + 'px';
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!raf) raf = requestAnimationFrame(() => { raf = null; update(); });
+      }, { passive: true });
+      window.addEventListener('resize', update, { passive: true });
+
+      update();
+    })();
+  </script>
+
+</body>
+</html>

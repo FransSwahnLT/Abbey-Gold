@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keith's Flooring & Window Fashions — Abbey Gold</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=12">
+</head>
+<body>
+
+  <!--
+    Navbar sits OUTSIDE .hero so position:fixed is truly viewport-fixed.
+    CSS transform on .hero (snap animation) would trap fixed children
+    inside it — keeping navbar separate avoids that.
+  -->
+  <header class="navbar" id="navbar">
+    <script>
+      // Runs synchronously during HTML parse — holds nav in hidden state before first render.
+      // Skipped if user prefers reduced motion so everything stays visible.
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        document.currentScript.parentElement.classList.add('nav-sequencing');
+      }
+    </script>
+    <div class="navbar__inner">
+
+      <a href="/" class="logo" aria-label="Keith's — home">
+        <span class="logo__text">Keith's</span>
+      </a>
+
+      <nav id="main-nav" class="navbar__nav" aria-label="Main navigation">
+        <ul class="nav-list">
+          <li class="nav-list__item nav-list__item--has-dropdown">
+            <a href="#flooring" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Flooring
+              <svg class="nav-link__caret" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <ul class="nav-dropdown" aria-label="Flooring">
+              <li><a href="#hardwood"   class="nav-dropdown__link">Hardwood</a></li>
+              <li><a href="#lvp"        class="nav-dropdown__link">Luxury Vinyl</a></li>
+              <li><a href="#carpet"     class="nav-dropdown__link">Carpet</a></li>
+              <li><a href="#tile"       class="nav-dropdown__link">Tile &amp; Stone</a></li>
+              <li><a href="#laminate"   class="nav-dropdown__link">Laminate</a></li>
+              <li><a href="#area-rugs"  class="nav-dropdown__link">Area Rugs</a></li>
+            </ul>
+          </li>
+          <li class="nav-list__item nav-list__item--has-dropdown">
+            <a href="#window-fashions" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Window Fashions
+              <svg class="nav-link__caret" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <ul class="nav-dropdown" aria-label="Window Fashions">
+              <li><a href="#blinds"     class="nav-dropdown__link">Blinds</a></li>
+              <li><a href="#shades"     class="nav-dropdown__link">Shades</a></li>
+              <li><a href="#shutters"   class="nav-dropdown__link">Shutters</a></li>
+              <li><a href="#drapery"    class="nav-dropdown__link">Drapery</a></li>
+              <li><a href="#motorized"  class="nav-dropdown__link">Motorized</a></li>
+            </ul>
+          </li>
+          <li class="nav-list__item nav-list__item--has-dropdown">
+            <a href="#why-abbey" class="nav-link" aria-haspopup="true" aria-expanded="false">
+              Why Keith's?
+              <svg class="nav-link__caret" width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M4 6L8 10L12 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+            <ul class="nav-dropdown" aria-label="Why Keith's?">
+              <li><a href="#our-story"  class="nav-dropdown__link">Our Story</a></li>
+              <li><a href="#installers" class="nav-dropdown__link">Expert Installers</a></li>
+              <li><a href="#guarantee"  class="nav-dropdown__link">Satisfaction Guarantee</a></li>
+              <li><a href="#reviews"    class="nav-dropdown__link">Customer Reviews</a></li>
+              <li><a href="#financing"  class="nav-dropdown__link">Financing Options</a></li>
+            </ul>
+          </li>
+          <li class="nav-list__item">
+            <a href="#visualizer" class="nav-link">Room Visualizer</a>
+          </li>
+          <li class="nav-list__item">
+            <a href="#financing" class="nav-link">Financing</a>
+          </li>
+        </ul>
+      </nav>
+
+      <div class="navbar__actions">
+        <a href="#estimate" class="btn btn--outline">Free estimate</a>
+        <button class="nav-toggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="main-nav">
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+          <span class="nav-toggle__bar"></span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <section class="hero">
+    <img
+      class="hero__bg"
+      src="https://www.figma.com/api/mcp/asset/d8dde3ef-21b2-4bf5-89a0-3e8d8ef99a8c"
+      alt="Bright open kitchen with dark slate tile floors and modern cabinetry"
+    >
+    <div class="hero__overlay"></div>
+
+    <div class="hero__content">
+      <div class="hero__text">
+        <h1 class="hero__heading">
+          Every great room<br>
+          starts underfoot.
+        </h1>
+        <p class="hero__sub">Thousands of styles. Expert guidance. Locally owned and trusted since 1958.</p>
+      </div>
+      <div class="hero__actions">
+        <a href="#flooring" class="btn btn--primary">Explore flooring</a>
+        <a href="#find-store" class="btn btn--outline">Find a showroom</a>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- layout spacer — matches hero height so content below starts in the right place -->
+  <div class="hero-spacer" aria-hidden="true"></div>
+
+  <section class="trust-banner">
+    <div class="trust-banner__inner">
+      <div class="trust-item">
+        <img class="trust-item__icon" src="https://www.figma.com/api/mcp/asset/661cc9e2-69c2-413d-bb81-e387b9b764eb" alt="" aria-hidden="true">
+        <p class="trust-item__label">65+ years in business</p>
+      </div>
+      <div class="trust-item">
+        <img class="trust-item__icon" src="https://www.figma.com/api/mcp/asset/a6c8dfac-e82e-4c97-8456-5423774adfc6" alt="" aria-hidden="true">
+        <p class="trust-item__label">Lifetime warranty on select carpet</p>
+      </div>
+      <div class="trust-item">
+        <img class="trust-item__icon" src="https://www.figma.com/api/mcp/asset/aad81a50-a617-4ae4-b6a0-0dae3340e381" alt="" aria-hidden="true">
+        <p class="trust-item__label">60-day satisfaction guarantee</p>
+      </div>
+      <div class="trust-item">
+        <img class="trust-item__icon" src="https://www.figma.com/api/mcp/asset/9b58d6dc-82e7-4a96-8e91-f4d19ff1b71e" alt="" aria-hidden="true">
+        <p class="trust-item__label">Free in-home estimates</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Visualizer block -->
+  <section class="viz-block">
+    <div class="viz-block__text">
+      <h2 class="viz-block__heading">See any floor in your room before you buy.</h2>
+      <p class="viz-block__body">Upload a photo of your space and instantly preview hundreds of styles — no store visit required.</p>
+      <a href="#visualizer" class="btn btn--outline-green">Try the room visualizer</a>
+    </div>
+    <div class="viz-block__image">
+      <img
+        src="https://www.figma.com/api/mcp/asset/d0938526-621a-4cec-aa86-ba54cca8e0de"
+        alt="Hand holding a phone showing a flooring preview in a living room using the room visualizer"
+      >
+    </div>
+  </section>
+
+  <!-- Image + text block 2 — image left -->
+  <section class="viz-block viz-block--reversed">
+    <div class="viz-block__text">
+      <h2 class="viz-block__heading">From first look to flawless install.</h2>
+      <p class="viz-block__body">Our specialists guide you through every choice. We measure, we source, and we install — backed by a full satisfaction guarantee.</p>
+      <a href="#estimate" class="btn btn--outline-green">Book a free estimate</a>
+    </div>
+    <div class="viz-block__image">
+      <img
+        src="https://www.figma.com/api/mcp/asset/d8dde3ef-21b2-4bf5-89a0-3e8d8ef99a8c"
+        alt="Bright kitchen with white cabinetry and dark hardwood floors"
+      >
+    </div>
+  </section>
+
+  <script>
+    // ── Hero content reveal → nav items → CTA (sequential, no overlap)
+    (function () {
+      const img      = document.querySelector('.hero__bg');
+      const content  = document.querySelector('.hero__content');
+      const navLinks = document.querySelectorAll('.nav-list__item .nav-link');
+      const navCta   = document.querySelector('.navbar__actions .btn--outline');
+
+      const startNavSequence = () => {
+        // All items play simultaneously; stagger is baked into animation-delay per nth-child.
+        // 5 items × 60ms stagger + 380ms duration → last item ends at 620ms.
+        navLinks.forEach(link => { link.style.animationPlayState = 'running'; });
+        setTimeout(() => { navCta.style.animationPlayState = 'running'; }, 670);
+      };
+
+      const reveal = () => {
+        content.style.animationPlayState = 'running';
+        content.addEventListener('animationend', startNavSequence, { once: true });
+      };
+
+      if (img.complete && img.naturalWidth > 0) {
+        reveal();
+      } else {
+        img.addEventListener('load',  reveal, { once: true });
+        img.addEventListener('error', reveal, { once: true });
+      }
+    })();
+
+    // ── Track navbar height for sticky content offset (--navbar-h)
+    (function () {
+      const setNavH = () => {
+        document.documentElement.style.setProperty('--navbar-h', navbar.offsetHeight + 'px');
+      };
+      setNavH();
+      window.addEventListener('resize', setNavH, { passive: true });
+    })();
+
+    // ── Mobile nav toggle
+    const toggle = document.querySelector('.nav-toggle');
+    const nav    = document.getElementById('main-nav');
+    toggle.addEventListener('click', () => {
+      const open = toggle.getAttribute('aria-expanded') === 'true';
+      toggle.setAttribute('aria-expanded', String(!open));
+      nav.classList.toggle('is-open', !open);
+    });
+
+    // ── Viz-block image parallax: 80% speed entering, 110% exiting
+    (function () {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      const containers = Array.from(document.querySelectorAll('.viz-block__image'));
+      if (!containers.length) return;
+
+      let vh = window.innerHeight;
+      const items = containers.map(el => ({ el, img: el.querySelector('img'), top: 0, h: 0 }));
+
+      function cache() {
+        vh = window.innerHeight;
+        const sy = window.scrollY;
+        items.forEach(item => {
+          item.el.style.transform = '';
+          const rect = item.el.getBoundingClientRect();
+          item.top = rect.top + sy;
+          item.h   = item.el.offsetHeight;
+        });
+      }
+
+      function update() {
+        const sy = window.scrollY;
+        items.forEach(({ el, top, h }) => {
+          const midRef = top + h / 2 - vh / 2;
+          const delta  = sy - midRef;
+          const speed  = delta < 0 ? 0.8 : 1.1;
+          el.style.transform = `translateY(${(delta * (1 - speed)).toFixed(2)}px)`;
+        });
+      }
+
+      cache(); update();
+      let raf = null;
+      window.addEventListener('scroll', () => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => { raf = null; update(); });
+      }, { passive: true });
+      window.addEventListener('resize', () => { cache(); update(); }, { passive: true });
+    })();
+
+    // ── Nav dropdown toggle
+    (function () {
+      const items = document.querySelectorAll('.nav-list__item--has-dropdown');
+
+      function closeAll(except) {
+        items.forEach(item => {
+          if (item === except) return;
+          item.classList.remove('is-open');
+          item.querySelector('.nav-link').setAttribute('aria-expanded', 'false');
+        });
+      }
+
+      items.forEach(item => {
+        const trigger = item.querySelector('.nav-link');
+        trigger.addEventListener('click', e => {
+          e.preventDefault();
+          const opening = !item.classList.contains('is-open');
+          closeAll(item);
+          item.classList.toggle('is-open', opening);
+          trigger.setAttribute('aria-expanded', String(opening));
+        });
+      });
+
+      document.addEventListener('click', e => {
+        if (!e.target.closest('.nav-list__item--has-dropdown')) closeAll();
+      });
+
+      document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeAll();
+      });
+    })();
+
+    // ── Hero snap-out + navbar solid state
+    (function () {
+      const hero   = document.querySelector('.hero');
+      const navbar = document.getElementById('navbar');
+      const RATIO  = 0.18;
+      let trigger  = hero.offsetHeight * RATIO;
+      let snapped  = false;
+      let raf      = null;
+
+      window.addEventListener('resize', () => {
+        trigger = hero.offsetHeight * RATIO;
+      }, { passive: true });
+
+      window.addEventListener('scroll', () => {
+        if (raf) return;
+        raf = requestAnimationFrame(() => {
+          raf = null;
+          const y = window.scrollY;
+          if (y > trigger && !snapped) {
+            hero.classList.add('is-snapped');
+            navbar.classList.add('navbar--solid');
+            snapped = true;
+          } else if (y <= trigger && snapped) {
+            hero.classList.remove('is-snapped');
+            navbar.classList.remove('navbar--solid');
+            snapped = false;
+          }
+        });
+      }, { passive: true });
+    })();
+  </script>
+
+</body>
+</html>

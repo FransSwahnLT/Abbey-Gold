@@ -1,0 +1,32 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__95be6216-13bd-4375-985b-b722efff9c6d__get_design_context",
+      "mcp__95be6216-13bd-4375-985b-b722efff9c6d__get_screenshot",
+      "mcp__95be6216-13bd-4375-985b-b722efff9c6d__get_metadata",
+      "mcp__95be6216-13bd-4375-985b-b722efff9c6d__whoami",
+      "mcp__Claude_Preview__preview_start",
+      "WebFetch(domain:fonts.google.com)",
+      "WebFetch(domain:www.fontshare.com)",
+      "WebFetch(domain:api.fontshare.com)",
+      "WebFetch(domain:cdn.fontshare.com)",
+      "WebFetch(domain:www.tasatype.com)",
+      "Bash(curl -s \"https://api.fontshare.com/v2/css?f[]=tasa-orbiter-text@400,500,700&display=swap\")",
+      "WebFetch(domain:fonts.googleapis.com)",
+      "Bash(curl -s \"https://fonts.googleapis.com/css2?family=Tasa+Orbiter+Text:wght@400;500&display=swap\" -A \"Mozilla/5.0\")",
+      "Bash(curl -s \"https://fonts.googleapis.com/css2?family=TASA+Orbiter+Display:wght@400;500&display=swap\" -A \"Mozilla/5.0\")",
+      "Bash(curl -s \"https://fonts.googleapis.com/css2?family=Tasa+Orbiter+Display:wght@400;500&display=swap\" -A \"Mozilla/5.0\")",
+      "Bash(curl -s \"https://fonts.googleapis.com/css2?family=Tasa+Orbiter:ital,wght@0,100..900&display=swap\" -A \"Mozilla/5.0\")",
+      "Bash(curl -s \"https://fonts.googleapis.com/css2?family=Tasa+Orbiter:wght@100..900&display=swap\" -A \"Mozilla/5.0\")",
+      "Bash(curl -s \"https://fonts.google.com/metadata/fonts\" -A \"Mozilla/5.0\")",
+      "Bash(python3 -c \"import sys,json; d=json.load\\(sys.stdin\\); [print\\(f['family']\\) for f in d.get\\('familyMetadataList',[]\\) if 'tasa' in f['family'].lower\\(\\) or 'orbiter' in f['family'].lower\\(\\)]\")",
+      "Bash(curl -s \"https://fonts.googleapis.com/css2?family=TASA+Orbiter:wght@400;500;700&display=swap\" -A \"Mozilla/5.0\")",
+      "Bash(node /Users/franskarlsson/.claude/skills/impeccable/scripts/load-context.mjs)",
+      "mcp__95be6216-13bd-4375-985b-b722efff9c6d__download_assets",
+      "Bash(curl -s -o /tmp/figma_screenshot.png \"https://www.figma.com/api/mcp/asset/f2519940-93f5-4875-a563-4ee9f113ed0f\")",
+      "Bash(grep -i \"margin\\\\|padding\\\\|gap\\\\|ig$\\\\|ig \")",
+      "mcp__95be6216-13bd-4375-985b-b722efff9c6d__search_design_system",
+      "WebFetch(domain:cdn.jsdelivr.net)"
+    ]
+  }
+}
