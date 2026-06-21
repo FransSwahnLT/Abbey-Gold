@@ -6,7 +6,7 @@
   <title>Keith's Flooring & Window Fashions — Abbey Gold</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;700&family=TASA+Orbiter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&family=TASA+Orbiter:wght@400;500;700&display=swap" rel="stylesheet">
   <style>
     /* ─── Reset ─────────────────────────────────────────────────────── */
     *, *::before, *::after {
@@ -45,7 +45,7 @@
       --color-bg:      #FCFDFC;
       --color-text:    #0C0D0E;
       --color-white:   #FCFDFC;
-      --font:          'Syne', sans-serif;
+      --font:          'DM Sans', sans-serif;
       --font-body:     'TASA Orbiter', sans-serif;
     }
 
@@ -157,6 +157,7 @@
       height: 100svh;
       min-height: 480px;
       overflow: hidden;
+      background: #000;
     }
 
     .hero-spacer { display: none; }
@@ -174,18 +175,16 @@
       object-fit: cover;
       object-position: center;
       pointer-events: none;
-      animation: hero-bg-settle 4000ms cubic-bezier(0.25, 0.1, 0.25, 1) both;
+      opacity: 0;
+      transition: opacity 1200ms ease;
     }
 
     .hero__overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0.50)  0%,
-        rgba(0, 0, 0, 0.14) 47%,
-        rgba(0, 0, 0, 0.00) 72%
-      );
+      background:
+        linear-gradient(to bottom,  rgba(0,0,0,0.38) 0%,  rgba(0,0,0,0.00) 30%),
+        linear-gradient(to top,     rgba(0,0,0,0.72) 0%,  rgba(0,0,0,0.00) 60%);
       pointer-events: none;
     }
 
@@ -556,7 +555,7 @@
       display: flex;
       flex-direction: column;
       gap: 24px;
-      padding: var(--pad-y-l) var(--pad-x-s) 0;
+      padding: var(--pad-y-l) var(--pad-x-s) var(--pad-y-l);
       position: sticky;
       top: calc(var(--navbar-h, 130px) + var(--pad-y-l));
       align-self: flex-start;
@@ -787,7 +786,7 @@
     }
 
     /* ─── Product Showcase ─────────────────────────────────────────── */
-    .ps { position: relative; padding-top: 50vh; }
+    .ps { position: relative; padding-top: 25vh; }
 
     .ps__track { position: relative; /* height set by JS */ }
 
@@ -809,23 +808,20 @@
       position: absolute;
       inset: 0;
       opacity: 0;
-      transform: scale(1.03);
+      transform: translateY(100%);
       will-change: opacity, transform;
-      transition: opacity 2000ms cubic-bezier(0.37, 0, 0.63, 1),
-                  transform 2000ms cubic-bezier(0.37, 0, 0.63, 1);
+      transition: opacity 800ms cubic-bezier(0.37, 0, 0.63, 1),
+                  transform 1800ms cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .ps__img:first-child,
-    .ps__img.is-active { opacity: 1; transform: scale(1); }
+    .ps__img:first-child { opacity: 1; transform: translateY(0); transition: none; }
+    .ps__img.is-active   { opacity: 1; transform: translateY(0); }
 
     .ps__img img {
       width: 100%; height: 100%;
       object-fit: cover; display: block;
     }
 
-    .ps__img--window {
-      background: linear-gradient(145deg, #5e7452 0%, #3e4f38 55%, #6e8460 100%);
-    }
-    .ps__img--window img { display: none; }
+    .ps__img--window img { object-fit: cover; width: 100%; height: 100%; }
 
     /* Bottom vignette on every image */
     .ps__img::after {
@@ -866,13 +862,6 @@
       max-width: min(600px, 58vw);
     }
 
-    .ps__counter {
-      font-family: var(--font-body);
-      font-size: var(--text-caption);
-      letter-spacing: 0.14em;
-      color: rgba(252,253,252,0.38);
-      margin-bottom: 14px;
-    }
 
     .ps__name {
       font-family: var(--font);
@@ -882,7 +871,7 @@
       line-height: 0.88;
       color: var(--color-bg);
       white-space: nowrap;
-      transition: opacity 900ms cubic-bezier(0.37, 0, 0.63, 1);
+      transition: opacity 700ms cubic-bezier(0.37, 0, 0.63, 1);
     }
 
     .ps__blurb {
@@ -892,7 +881,7 @@
       line-height: 1.5;
       max-width: 42ch;
       margin-top: 16px;
-      transition: opacity 900ms cubic-bezier(0.37, 0, 0.63, 1);
+      transition: opacity 700ms cubic-bezier(0.37, 0, 0.63, 1);
     }
 
     .ps__cta {
@@ -915,6 +904,7 @@
       text-decoration: none;
       cursor: pointer;
       transition:
+        opacity          700ms cubic-bezier(0.37, 0, 0.63, 1),
         background-color 180ms linear,
         color            180ms linear,
         border-color     180ms linear;
@@ -1027,7 +1017,8 @@
 
   <header class="navbar" id="navbar">
     <script>
-      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+          !sessionStorage.getItem('ps-session-start')) {
         document.currentScript.parentElement.classList.add('nav-sequencing');
       }
     </script>
@@ -1078,7 +1069,7 @@
               </svg>
             </a>
             <ul class="nav-dropdown" aria-label="Why Keith's?">
-              <li><a href="#our-story"     class="nav-dropdown__link">Our Story</a></li>
+              <li><a href="our-story.html" class="nav-dropdown__link">Our Story</a></li>
               <li><a href="#installers"    class="nav-dropdown__link">Expert Installers</a></li>
               <li><a href="#guarantee"     class="nav-dropdown__link">Satisfaction Guarantee</a></li>
               <li><a href="#reviews"       class="nav-dropdown__link">Customer Reviews</a></li>
@@ -1119,7 +1110,7 @@
           Every great room<br>
           starts underfoot.
         </h1>
-        <p class="hero__sub">Thousands of styles. Expert guidance. Locally owned and trusted since 1958.</p>
+        <p class="hero__sub">Thousands of styles. Expert guidance. Locally owned and trusted since 1972.</p>
       </div>
       <div class="hero__actions">
         <a href="#flooring" class="btn btn--primary">Explore flooring</a>
@@ -1203,7 +1194,7 @@
             <img src="https://www.figma.com/api/mcp/asset/887ae287-4457-43db-87c5-6693baff816b" alt="Area rugs — living room" loading="lazy">
           </div>
           <div class="ps__img ps__img--window">
-            <img src="" alt="" aria-hidden="true">
+            <img src="ps-window.jpg" alt="Window fashions — custom shades and drapery" loading="lazy">
           </div>
         </div>
 
@@ -1212,7 +1203,6 @@
         </div>
 
         <div class="ps__content">
-          <p class="ps__counter" id="psCounter">01 / 07</p>
           <div class="ps__dots" id="psDots" aria-hidden="true">
             <button class="ps__dot is-active" tabindex="-1"></button>
             <button class="ps__dot" tabindex="-1"></button>
@@ -1274,6 +1264,9 @@
       const navCta   = document.querySelector('.navbar__actions .btn--outline');
 
       const reveal = () => {
+        const isFirst = !sessionStorage.getItem('ps-session-start');
+        sessionStorage.setItem('ps-session-start', '1');
+        if (img) img.style.opacity = '1';
         content.style.animationPlayState = 'running';
         // CSS animations sit above the author cascade and override inline styles.
         // Once the entrance finishes, clear the animation so the scroll-exit fade
@@ -1282,11 +1275,13 @@
           content.style.animation = 'none';
           content.style.opacity   = '1';
         }, { once: true });
-        setTimeout(() => {
-          logo.style.animationPlayState = 'running';
-          navLinks.forEach(link => { link.style.animationPlayState = 'running'; });
-          setTimeout(() => { navCta.style.animationPlayState = 'running'; }, 750);
-        }, 500);
+        if (isFirst) {
+          setTimeout(() => {
+            logo.style.animationPlayState = 'running';
+            navLinks.forEach(link => { link.style.animationPlayState = 'running'; });
+            setTimeout(() => { navCta.style.animationPlayState = 'running'; }, 750);
+          }, 500);
+        }
       };
 
       if (img.complete && img.naturalWidth > 0) { reveal(); }
@@ -1450,8 +1445,7 @@
       }, { passive: true });
     })();
 
-    // Trust banner + viz-blocks: delayed catch-up scroll + padding shrink
-    // Merged into one rAF so getBoundingClientRect reads the freshly-set transform
+    // Trust banner exit fade + viz-block / gallery / product exit fades
     (function () {
       if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
       const banner       = document.querySelector('.trust-banner');
@@ -1462,32 +1456,10 @@
       const psExitEls    = Array.from(document.querySelectorAll('.ps__content, .ps__label'));
       if (!banner || !hero) return;
 
-      // Golden-ratio padding: settled = icon height × φ, entering = settled × φ
-      const PHI    = 1.618;
-      const icon   = banner.querySelector('.trust-item__icon');
-      const iconH  = (icon && icon.offsetHeight > 0) ? icon.offsetHeight : 56;
-      const padMin = iconH * PHI;         // ~90.6px — settled state
-      const padMax = padMin * PHI;        // ~146.5px — entering state
-
       function update() {
-        const vh     = window.innerHeight;
-        const catch_ = hero.offsetHeight * 0.65;
-        const offset = vh * 0.45;
-        const t      = Math.max(0, 1 - window.scrollY / catch_);
-        const ty     = (offset * t).toFixed(2);
+        const vh = window.innerHeight;
 
-        // Banner slides down via transform (GPU); margin-top on first viz-block
-        // closes the gap without breaking position:sticky on viz-block__text
-        banner.style.transform = `translateY(${ty}px)`;
-        if (vizBlocks[0]) vizBlocks[0].style.marginTop = ty + 'px';
-
-        // Padding shrink + exit fade — both read rect AFTER transform (forces layout)
-        const rect          = banner.getBoundingClientRect();
-        const bannerCenterY = rect.top + rect.height / 2;
-        const progress      = Math.min(Math.max(1 - (bannerCenterY - vh / 2) / (vh / 2), 0), 1);
-        const padValue      = padMax + (padMin - padMax) * progress;
-        banner.style.paddingTop    = padValue + 'px';
-        banner.style.paddingBottom = padValue + 'px';
+        const rect = banner.getBoundingClientRect();
 
         if (bannerInner) {
           const fadeOver = vh * 0.55;
@@ -1550,7 +1522,6 @@
       const nameEl  = document.getElementById('psName');
       const blurbEl = document.getElementById('psBlurb');
       const ctaEl   = document.getElementById('psCta');
-      const counter = document.getElementById('psCounter');
       const dots    = Array.from(document.querySelectorAll('#psDots .ps__dot'));
       const images  = Array.from(document.querySelectorAll('.ps__img'));
       if (!track || !images.length) return;
@@ -1611,9 +1582,10 @@
       }
 
       const scrollStep = () => window.innerHeight * 0.50;
+      const tailHold   = () => window.innerHeight * 1.0; // extra dwell on last card
 
       function setHeight() {
-        track.style.height = (window.innerHeight + (N - 1) * scrollStep()) + 'px';
+        track.style.height = (window.innerHeight + (N - 1) * scrollStep() + tailHold()) + 'px';
       }
       setHeight();
       window.addEventListener('resize', setHeight, { passive: true });
@@ -1622,6 +1594,7 @@
         if (idx === activeIdx) return;
         activeIdx = idx;
         const p = products[idx];
+        // Exit: fade out
         nameEl.style.opacity  = '0';
         blurbEl.style.opacity = '0';
         ctaEl.style.opacity   = '0';
@@ -1630,8 +1603,6 @@
           blurbEl.textContent = p.blurb;
           ctaEl.textContent   = p.cta + ' →';
           ctaEl.href          = p.href;
-          counter.textContent =
-            String(idx + 1).padStart(2, '0') + ' / ' + String(N).padStart(2, '0');
           nameEl.style.opacity  = '1';
           blurbEl.style.opacity = '1';
           ctaEl.style.opacity   = '1';
@@ -1639,10 +1610,7 @@
         dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
       }
 
-      // Queued transition engine: images step one at a time regardless of scroll speed
-      let displayedIdx  = 0;
-      let transitioning = false;
-      let latestScrolled = 0;
+      let displayedIdx = 0;
       let raf = null;
 
       function targetFromScrolled(s) {
@@ -1662,20 +1630,10 @@
         displayedIdx = idx;
       }
 
-      function advanceOne() {
-        const target = targetFromScrolled(latestScrolled);
-        if (target === displayedIdx) { transitioning = false; return; }
-        transitioning = true;
-        const next = target > displayedIdx ? displayedIdx + 1 : displayedIdx - 1;
-        applyDisplay(next);
-        // wait for CSS transition to finish before allowing next step
-        setTimeout(advanceOne, 2100);
-      }
-
       function update() {
         const scrolled = -track.getBoundingClientRect().top;
-        latestScrolled = Math.max(scrolled, 0);
-        if (!transitioning) advanceOne();
+        const target = targetFromScrolled(Math.max(scrolled, 0));
+        if (target !== displayedIdx) applyDisplay(target);
       }
 
       window.addEventListener('scroll', () => {
@@ -1738,9 +1696,9 @@
         raf = null;
         const vh = window.innerHeight;
 
-        // Dark: drifts in over 50% vh after viz-block fully exits — cinematic, unhurried
+        // Dark: drifts in over 25% vh after viz-block fully exits — matches halved ps padding
         const rd = darkTrigger.getBoundingClientRect();
-        const tDark = sineInOut(Math.min(Math.max(-rd.bottom / (vh * 0.50), 0), 1));
+        const tDark = sineInOut(Math.min(Math.max(-rd.bottom / (vh * 0.25), 0), 1));
 
         // Light: gradual return over 1.5 viewports as gallery approaches
         // Accent: bg shifts to lime as we scroll into the 38vh padding zone above footer
@@ -1863,7 +1821,7 @@
     </nav>
     <div class="footer__bottom">
       <p class="footer__copy">&copy; 2024 Keith's Flooring &amp; Window Fashions. All rights reserved.</p>
-      <p class="footer__copy">Locally owned since 1958.</p>
+      <p class="footer__copy">Locally owned since 1972.</p>
     </div>
   </div>
   </footer>
