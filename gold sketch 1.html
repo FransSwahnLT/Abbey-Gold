@@ -790,80 +790,159 @@
 
     .ps__track { position: relative; /* height set by JS */ }
 
-    .ps__stage {
-      position: sticky;
-      top: 0;
-      height: 100svh;
+    /* ── Peek Carousel (psp) ─────────────────────────────────── */
+    .ps[data-ps-mode="peek"] { padding-top: 0; }
+
+    .psp {
+      height: 90vh;
+      position: relative;
+      overflow: hidden;
+      background: var(--color-primary);
+    }
+
+    .psp__track {
+      display: flex;
+      flex-direction: row;
+      height: 100%;
+      will-change: transform;
+    }
+
+    .psp__slide:last-child { width: 100vw; }
+
+    .psp__slide {
+      width: 90vw;
+      height: 100%;
+      flex-shrink: 0;
+      position: relative;
       overflow: hidden;
     }
-    .ps__images {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      transition: opacity 2000ms cubic-bezier(0.37, 0, 0.63, 1);
-    }
-    .ps__stage.is-revealed .ps__images { opacity: 1; }
 
-    .ps__img {
-      position: absolute;
-      inset: 0;
-      opacity: 0;
-      transform: translateY(100%);
-      will-change: opacity, transform;
-      transition: opacity 800ms cubic-bezier(0.37, 0, 0.63, 1),
-                  transform 1800ms cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .ps__img:first-child { opacity: 1; transform: translateY(0); transition: none; }
-    .ps__img.is-active   { opacity: 1; transform: translateY(0); }
-
-    .ps__img img {
+    .psp__slide img {
       width: 100%; height: 100%;
       object-fit: cover; display: block;
-    }
-
-    .ps__img--window img { object-fit: cover; width: 100%; height: 100%; }
-
-    /* Bottom vignette on every image */
-    .ps__img::after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to top,
-        rgba(5,6,7,0.84) 0%,
-        rgba(5,6,7,0.28) 32%,
-        rgba(5,6,7,0.04) 58%,
-        transparent 100%
-      );
       pointer-events: none;
     }
 
-    /* Top-left label */
-    .ps__label {
-      position: absolute;
-      top: calc(var(--navbar-h, 64px) + 28px);
-      left: var(--pad-x-m);
-      z-index: 10;
-    }
-    .ps__eyebrow {
-      font-family: var(--font-body);
-      font-size: var(--text-small);
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: rgba(252,253,252,0.42);
+    /* fixed bottom vignette over all slides — no class toggling, no animation glitch */
+    .psp::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to top,
+        rgba(5,6,7,0.84) 0%, rgba(5,6,7,0.28) 28%,
+        rgba(5,6,7,0.04) 52%, transparent 100%);
+      pointer-events: none;
+      z-index: 5; /* above slides (0), below content (10) and chevs (20) */
     }
 
-    /* Bottom-left product content */
-    .ps__content {
+    /* subtle uniform dim on non-active (peek) slides */
+    .psp__slide:not(.is-active)::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: rgba(5,6,7,0.3);
+      pointer-events: none;
+      transition: background 350ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* chevrons */
+    .psp__chev {
+      position: absolute;
+      top: 50%;
+      /* starts 10px below resting; ui-visible lifts it into place */
+      transform: translateY(calc(-50% + 10px));
+      opacity: 0;
+      pointer-events: none;
+      z-index: 20;
+      width: 52px; height: 52px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(252,253,252,0.10);
+      border: 1px solid rgba(252,253,252,0.18);
+      color: rgba(252,253,252,0.90);
+      cursor: pointer;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition:
+        opacity       500ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform     500ms cubic-bezier(0.16, 1, 0.3, 1),
+        background    250ms cubic-bezier(0.16, 1, 0.3, 1),
+        border-color  250ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .psp__chev--left  { left: 28px; }
+    .psp__chev--right { right: 28px; }
+
+    /* revealed: lift into -50% resting position; inline opacity from goTo() handles boundaries */
+    .psp.ui-visible .psp__chev {
+      transform: translateY(-50%);
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .psp.ui-visible .psp__chev:hover {
+      background: rgba(252,253,252,0.22);
+      border-color: rgba(252,253,252,0.55);
+      transform: translateY(-50%) scale(1.08);
+      transition:
+        opacity       500ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform     200ms cubic-bezier(0.16, 1, 0.3, 1),
+        background    200ms cubic-bezier(0.16, 1, 0.3, 1),
+        border-color  200ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    /* force-hidden when not revealed — beats inline styles set by goTo() */
+    .psp:not(.ui-visible) .psp__chev {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transform: translateY(calc(-50% + 10px)) !important;
+    }
+    .psp__chev svg { pointer-events: none; }
+
+    /* content overlay */
+    .psp__content {
       position: absolute;
       bottom: 0; left: 0;
       z-index: 10;
       padding: 0 var(--pad-x-m) calc(var(--pad-y-l) * 1.5);
-      max-width: min(600px, 58vw);
+      max-width: min(640px, 60vw);
     }
 
+    /* progress dashes — scroll-reveal (same trigger as chevs, 500ms) */
+    .psp__dots {
+      display: flex;
+      flex-direction: row;
+      gap: 6px;
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition:
+        opacity   500ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .psp.ui-visible .psp__dots {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .psp__dot {
+      width: 24px; height: 5px;
+      background: rgba(252,253,252,0.22);
+      border: none; border-radius: 3px;
+      cursor: pointer; padding: 0;
+      /* extend click target vertically */
+      position: relative;
+      transition:
+        width      500ms cubic-bezier(0.16, 1, 0.3, 1),
+        background 400ms cubic-bezier(0.16, 1, 0.3, 1),
+        transform  200ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .psp__dot::before {
+      content: ''; position: absolute;
+      inset: -8px -2px; /* expanded hit area */
+    }
+    .psp__dot:hover { background: rgba(252,253,252,0.50); transform: scaleY(1.4); }
+    .psp__dot.is-active { width: 48px; background: var(--color-accent-text); }
+    .psp__dot.is-active:hover { transform: none; }
 
-    .ps__name {
+    /* text & cta */
+    .psp__name {
       font-family: var(--font);
       font-size: clamp(4rem, 2.5rem + 6vw, 9rem);
       font-weight: 400;
@@ -871,75 +950,69 @@
       line-height: 0.88;
       color: var(--color-bg);
       white-space: nowrap;
-      transition: opacity 700ms cubic-bezier(0.37, 0, 0.63, 1);
+      opacity: 0;
+      transform: translateY(10px);
+      /* exit (destination = base, class removed): 1200ms opacity — 3× slower */
+      transition:
+        opacity   1200ms cubic-bezier(0.37, 0, 0.63, 1),
+        transform 700ms  cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    .ps__blurb {
+    .psp__blurb {
       font-family: var(--font-body);
       font-size: var(--text-subtitle);
       color: rgba(252,253,252,0.65);
       line-height: 1.5;
       max-width: 42ch;
       margin-top: 16px;
-      transition: opacity 700ms cubic-bezier(0.37, 0, 0.63, 1);
+      opacity: 0;
+      transform: translateY(10px);
+      transition:
+        opacity   1200ms cubic-bezier(0.37, 0, 0.63, 1),
+        transform 700ms  cubic-bezier(0.16, 1, 0.3, 1);
     }
-
-    .ps__cta {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      margin-top: 22px;
-      height: 40px;
-      padding: 0 22px;
-      font-family: var(--font-body);
-      font-size: var(--text-btn);
-      font-weight: 400;
+    .psp__cta {
+      display: inline-flex; align-items: center; gap: 8px;
+      margin-top: 22px; height: 40px; padding: 0 22px;
+      font-family: var(--font-body); font-size: var(--text-btn);
       letter-spacing: 0.08em;
-      white-space: nowrap;
-      color: var(--color-bg);
-      background: transparent;
+      color: var(--color-bg); background: transparent;
       border: 1px solid rgba(252,253,252,0.45);
-      border-radius: 0;
-      text-decoration: none;
-      cursor: pointer;
+      text-decoration: none; cursor: pointer;
+      opacity: 0;
+      transform: translateY(10px);
       transition:
-        opacity          700ms cubic-bezier(0.37, 0, 0.63, 1),
-        background-color 180ms linear,
-        color            180ms linear,
-        border-color     180ms linear;
+        opacity    1200ms cubic-bezier(0.37, 0, 0.63, 1),
+        transform  700ms  cubic-bezier(0.16, 1, 0.3, 1),
+        background 180ms  linear,
+        border-color 180ms linear;
     }
-    .ps__cta:hover {
-      background: rgba(252,253,252,0.12);
-      border-color: rgba(252,253,252,0.85);
-    }
-
-    /* Vertical progress dots — right side */
-    .ps__dots {
-      display: flex;
-      flex-direction: row;
-      gap: 6px;
-    }
-    .ps__dot {
-      width: 20px; height: 2px;
-      background: rgba(252,253,252,0.2);
-      border: none; border-radius: 1px;
-      cursor: pointer; padding: 0;
+    /* text+button scroll-reveal: triggers at 10% above bottom
+       entry (destination = ui-text-visible): 400ms opacity */
+    .psp.ui-text-visible .psp__name,
+    .psp.ui-text-visible .psp__blurb {
+      transform: translateY(0);
+      opacity: 1;
       transition:
-        width      700ms cubic-bezier(0.37, 0, 0.63, 1),
-        background 700ms cubic-bezier(0.37, 0, 0.63, 1);
+        opacity   400ms cubic-bezier(0.37, 0, 0.63, 1),
+        transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .ps__dot.is-active { width: 44px; background: var(--color-accent-text); }
+    .psp.ui-text-visible .psp__cta {
+      transform: translateY(0);
+      opacity: 1;
+      transition:
+        opacity    400ms cubic-bezier(0.37, 0, 0.63, 1),
+        transform  700ms cubic-bezier(0.16, 1, 0.3, 1),
+        background 180ms linear,
+        border-color 180ms linear;
+    }
+    .psp__cta:hover { background: rgba(252,253,252,0.12); border-color: rgba(252,253,252,0.85); }
 
-    @media (max-width: 767px),
-           (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-      .ps__content {
-        max-width: 86vw;
-        padding: 0 var(--pad-x-s) calc(var(--pad-y-l) * 2);
-      }
-      .ps__label  { left: var(--pad-x-s); }
-      .ps__dots   { display: none; }
-      .ps__name   { font-size: clamp(3rem, 9vw, 5rem); }
+    @media (max-width: 767px) {
+      .psp__content { max-width: 88vw; padding: 0 var(--pad-x-s) calc(var(--pad-y-l) * 1.75); }
+      .psp__name    { font-size: clamp(2.8rem, 8.5vw, 4.5rem); white-space: normal; }
+      .psp__chev    { width: 44px; height: 44px; }
+      .psp__chev--left  { left: 16px; }
+      .psp__chev--right { right: 16px; }
     }
 
     /* ─── Nav dropdowns ────────────────────────────────────────────── */
@@ -1516,164 +1589,200 @@
       window.addEventListener('resize', update, { passive: true });
     })();
 
-    // Product showcase: full-screen scroll-driven reveal
+    // Product showcase
     (function () {
-      const track   = document.getElementById('psTrack');
-      const nameEl  = document.getElementById('psName');
-      const blurbEl = document.getElementById('psBlurb');
-      const ctaEl   = document.getElementById('psCta');
-      const dots    = Array.from(document.querySelectorAll('#psDots .ps__dot'));
-      const images  = Array.from(document.querySelectorAll('.ps__img'));
-      if (!track || !images.length) return;
+      const PS_SECTION = document.querySelector('.ps');
+      if (!PS_SECTION) return;
 
-      const products = [
-        {
-          name:  'Hardwood',
-          blurb: 'Timeless beauty that gets better with age. From classic oak to rich walnut, our hardwood collection brings enduring warmth to any space.',
-          href:  '#hardwood',
-          cta:   'Explore Hardwood',
-        },
-        {
-          name:  'Luxury Vinyl',
-          blurb: 'Looks like wood. Laughs at spills. Built for busy households and active lives — without sacrificing a single inch of style.',
-          href:  '#luxury-vinyl',
-          cta:   'Explore Luxury Vinyl',
-        },
-        {
-          name:  'Carpet',
-          blurb: 'Where bare feet want to be. Soft underfoot and quiet in every room — our carpet selection brings comfort and texture to the spaces you love most.',
-          href:  '#carpet',
-          cta:   'Explore Carpet',
-        },
-        {
-          name:  'Tile & Stone',
-          blurb: 'Cool, clean, and made to last forever. Natural stone and precision-cut tile for kitchens, bathrooms, and every surface in between.',
-          href:  '#tile',
-          cta:   'Explore Tile & Stone',
-        },
-        {
-          name:  'Laminate',
-          blurb: 'All the look. None of the upkeep. Realistic wood and stone visuals in a surface that\'s scratch-resistant, easy to clean, and built for real life.',
-          href:  '#laminate',
-          cta:   'Explore Laminate',
-        },
-        {
-          name:  'Area Rugs',
-          blurb: 'The fastest way to transform any room. Define a space, anchor a seating area, or layer in texture — our curated rug collection does it all.',
-          href:  '#area-rugs',
-          cta:   'Explore Area Rugs',
-        },
-        {
-          name:  'Window Fashions',
-          blurb: 'Light, privacy, and beauty — on your terms. From motorized shades to custom drapery, we outfit every window with the same care we give every floor.',
-          href:  '#window-fashions',
-          cta:   'Explore Window Fashions',
-        },
+      const PRODUCTS = [
+        { name: 'Hardwood',         blurb: 'Timeless beauty that gets better with age. From classic oak to rich walnut, our hardwood collection brings enduring warmth to any space.',                                href: '#hardwood',        cta: 'Explore Hardwood' },
+        { name: 'Luxury Vinyl',     blurb: 'Looks like wood. Laughs at spills. Built for busy households and active lives — without sacrificing a single inch of style.',                                       href: '#luxury-vinyl',    cta: 'Explore Luxury Vinyl' },
+        { name: 'Carpet',           blurb: 'Where bare feet want to be. Soft underfoot and quiet in every room — our carpet selection brings comfort and texture to the spaces you love most.',                 href: '#carpet',          cta: 'Explore Carpet' },
+        { name: 'Tile & Stone',blurb: 'Cool, clean, and made to last forever. Natural stone and precision-cut tile for kitchens, bathrooms, and every surface in between.',                                    href: '#tile',            cta: 'Explore Tile & Stone' },
+        { name: 'Laminate',         blurb: "All the look. None of the upkeep. Realistic wood and stone visuals in a surface that's scratch-resistant, easy to clean, and built for real life.",                     href: '#laminate',        cta: 'Explore Laminate' },
+        { name: 'Area Rugs',        blurb: 'The fastest way to transform any room. Define a space, anchor a seating area, or layer in texture — our curated rug collection does it all.',                      href: '#area-rugs',       cta: 'Explore Area Rugs' },
+        { name: 'Window Fashions',  blurb: 'Light, privacy, and beauty — on your terms. From motorized shades to custom drapery, we outfit every window with the same care we give every floor.',             href: '#window-fashions', cta: 'Explore Window Fashions' },
       ];
+      const IMGS = [
+        { src: 'ps-hardwood.jpg', alt: 'Hardwood flooring — living room' },
+        { src: 'ps-vinyl.jpg',    alt: 'Luxury vinyl flooring — living room' },
+        { src: 'ps-carpet.jpg',   alt: 'Carpet flooring — bedroom' },
+        { src: 'ps-tile.jpg',     alt: 'Tile and stone flooring — bathroom' },
+        { src: 'ps-laminate.jpg', alt: 'Laminate flooring' },
+        { src: 'ps-rugs.jpg',     alt: 'Area rugs — living room' },
+        { src: 'ps-window.jpg',   alt: 'Window fashions — custom shades and drapery' },
+      ];
+      const N = PRODUCTS.length;
+      const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      const N = products.length;
-      let activeIdx = -1;
+      const tr = () => document.getElementById('psTrack');
 
-      // Reduced motion: show all images statically, no transforms
-      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        images.forEach(img => img.classList.add('is-active'));
-        setContent(0);
-        return;
-      }
-
-      const scrollStep = () => window.innerHeight * 0.50;
-      const tailHold   = () => window.innerHeight * 1.0; // extra dwell on last card
-
-      function setHeight() {
-        track.style.height = (window.innerHeight + (N - 1) * scrollStep() + tailHold()) + 'px';
-      }
-      setHeight();
-      window.addEventListener('resize', setHeight, { passive: true });
-
-      function setContent(idx) {
-        if (idx === activeIdx) return;
-        activeIdx = idx;
-        const p = products[idx];
-        // Exit: fade out
-        nameEl.style.opacity  = '0';
-        blurbEl.style.opacity = '0';
-        ctaEl.style.opacity   = '0';
+      function fadeContent(nameEl, blurbEl, ctaEl, idx) {
+        const p = PRODUCTS[idx];
+        [nameEl, blurbEl, ctaEl].forEach(e => { e.style.opacity = '0'; });
         setTimeout(() => {
           nameEl.textContent  = p.name;
           blurbEl.textContent = p.blurb;
           ctaEl.textContent   = p.cta + ' →';
           ctaEl.href          = p.href;
-          nameEl.style.opacity  = '1';
-          blurbEl.style.opacity = '1';
-          ctaEl.style.opacity   = '1';
-        }, 700);
-        dots.forEach((d, i) => d.classList.toggle('is-active', i === idx));
+          [nameEl, blurbEl, ctaEl].forEach(e => { e.style.opacity = '1'; });
+        }, 400);
       }
 
-      let displayedIdx = 0;
-      let raf = null;
+      // ── Peek Carousel ───────────────────────────────────────────────
+      function initPeek() {
+        const t = tr();
+        t.style.height = '';
 
-      function targetFromScrolled(s) {
-        const step = scrollStep();
-        for (let i = N - 1; i >= 1; i--) {
-          if (s >= (i - 0.5) * step) return i;
+        const slides = IMGS.map((d, i) =>
+          `<div class="psp__slide${i === 0 ? ' is-active' : ''}" data-idx="${i}">
+            <img src="${d.src}" alt="${d.alt}" loading="${i < 2 ? 'eager' : 'lazy'}">
+          </div>`
+        ).join('');
+
+        const dotsHtml = PRODUCTS.map((_, i) =>
+          `<button class="psp__dot${i === 0 ? ' is-active' : ''}" data-idx="${i}" aria-label="Go to ${PRODUCTS[i].name}"></button>`
+        ).join('');
+
+        const p0 = PRODUCTS[0];
+        t.innerHTML = `<div class="psp">
+          <div class="psp__track" id="pspTrack">${slides}</div>
+
+          <button class="psp__chev psp__chev--left"  id="pspLeft"  aria-label="Previous" style="opacity:0;pointer-events:none">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M13 16L7 10L13 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+          <button class="psp__chev psp__chev--right" id="pspRight" aria-label="Next">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M7 16L13 10L7 4" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <div class="psp__content">
+            <div class="psp__dots" id="pspDots">${dotsHtml}</div>
+            <h2 class="psp__name"  id="pspName">${p0.name}</h2>
+            <p  class="psp__blurb" id="pspBlurb">${p0.blurb}</p>
+            <a  class="psp__cta"   id="pspCta" href="${p0.href}">${p0.cta} →</a>
+          </div>
+        </div>`;
+
+        const pspEl   = t.querySelector('.psp');
+        const trackEl = document.getElementById('pspTrack');
+        const nameEl  = document.getElementById('pspName');
+        const blurbEl = document.getElementById('pspBlurb');
+        const ctaEl   = document.getElementById('pspCta');
+        const leftBtn = document.getElementById('pspLeft');
+        const rightBtn= document.getElementById('pspRight');
+        const allDots = Array.from(t.querySelectorAll('.psp__dot'));
+        const allSlides = Array.from(t.querySelectorAll('.psp__slide'));
+
+        let idx = 0;
+        let isPeeking = false;
+
+        function setPos(extraVw, ms) {
+          const x = -idx * 90 + (extraVw || 0);
+          trackEl.style.transition = `transform ${ms || 900}ms cubic-bezier(0.16, 1, 0.3, 1)`;
+          trackEl.style.transform  = `translateX(${x}vw)`;
         }
-        return 0;
-      }
 
-      function applyDisplay(idx) {
-        images.forEach((img, i) => {
-          if (i === 0) return;
-          img.classList.toggle('is-active', i <= idx);
+        function goTo(i) {
+          i = Math.max(0, Math.min(N - 1, i));
+          idx = i;
+          isPeeking = false;
+
+          allDots.forEach((d, j) => d.classList.toggle('is-active', j === idx));
+
+          leftBtn.style.opacity      = idx === 0     ? '0' : '1';
+          leftBtn.style.pointerEvents= idx === 0     ? 'none' : 'auto';
+          rightBtn.style.opacity     = idx === N - 1 ? '0' : '1';
+          rightBtn.style.pointerEvents= idx === N - 1 ? 'none' : 'auto';
+
+          setPos(0, 1800);
+          fadeContent(nameEl, blurbEl, ctaEl, idx);
+        }
+
+        // right chev: hover=peek, click=advance
+        function onRightEnter() { if (idx < N - 1) { isPeeking = true;  setPos(-15, 500); } }
+        function onRightLeave() { if (isPeeking)    { isPeeking = false; setPos(0,  320); } }
+        function onRightClick() { isPeeking = false; goTo(idx + 1); }
+        rightBtn.addEventListener('mouseenter', onRightEnter);
+        rightBtn.addEventListener('mouseleave', onRightLeave);
+        rightBtn.addEventListener('click',      onRightClick);
+
+        // left chev: hover=peek previous, click=go back
+        function onLeftEnter()  { if (idx > 0)   { isPeeking = true;  setPos(15, 500); } }
+        function onLeftLeave()  { if (isPeeking)  { isPeeking = false; setPos(0, 320); } }
+        function onLeftClick()  { isPeeking = false; goTo(idx - 1); }
+        leftBtn.addEventListener('mouseenter', onLeftEnter);
+        leftBtn.addEventListener('mouseleave', onLeftLeave);
+        leftBtn.addEventListener('click',      onLeftClick);
+
+        // dots
+        const dotHandlers = allDots.map((dot, i) => {
+          const fn = () => goTo(i);
+          dot.addEventListener('click', fn);
+          return fn;
         });
-        setContent(idx);
-        displayedIdx = idx;
+
+        // keyboard
+        function onKey(e) {
+          if (e.key === 'ArrowRight') { e.preventDefault(); goTo(idx + 1); }
+          if (e.key === 'ArrowLeft')  { e.preventDefault(); goTo(idx - 1); }
+        }
+        pspEl.setAttribute('tabindex', '0');
+        pspEl.addEventListener('keydown', onKey);
+
+        // init (no transition on first render)
+        setPos(0, 0);
+
+        // ── Scroll-reveal for chevs/dots/text (tracked via rect.bottom — the
+        //    content area is position:absolute;bottom:0, so rect.bottom is its
+        //    screen Y; animating on rect.top would fire before content is visible)
+        let revealRaf = null;
+        function updateReveal() {
+          revealRaf = null;
+          const rect = pspEl.getBoundingClientRect();
+          const vh   = window.innerHeight;
+          const chevsIn  = rect.bottom < vh * 0.975; // chevs+dots: 5% above bottom
+          const textIn   = rect.bottom < vh * 0.975; // text+btn: 5% above bottom
+          const btmOut   = rect.bottom < vh * 0.3;  // content 30% below top
+          const showUI   = chevsIn && !btmOut;
+          const showText = textIn  && !btmOut;
+
+          pspEl.classList.toggle('ui-visible',      showUI);
+          pspEl.classList.toggle('ui-text-visible', showText);
+        }
+        function onRevealScroll() {
+          if (!revealRaf) revealRaf = requestAnimationFrame(updateReveal);
+        }
+        window.addEventListener('scroll', onRevealScroll, { passive: true });
+        // Double-RAF: wait past first paint so opacity:0 is established before
+        // we potentially add ui-visible, ensuring CSS transitions actually fire.
+        requestAnimationFrame(() => requestAnimationFrame(updateReveal));
+
+        return () => {
+          rightBtn.removeEventListener('mouseenter', onRightEnter);
+          rightBtn.removeEventListener('mouseleave', onRightLeave);
+          rightBtn.removeEventListener('click',      onRightClick);
+          leftBtn.removeEventListener('mouseenter', onLeftEnter);
+          leftBtn.removeEventListener('mouseleave', onLeftLeave);
+          leftBtn.removeEventListener('click',      onLeftClick);
+          allDots.forEach((d, i) => d.removeEventListener('click', dotHandlers[i]));
+          pspEl.removeEventListener('keydown', onKey);
+          window.removeEventListener('scroll', onRevealScroll);
+          if (revealRaf) cancelAnimationFrame(revealRaf);
+          t.innerHTML = '';
+        };
       }
 
-      function update() {
-        const scrolled = -track.getBoundingClientRect().top;
-        const target = targetFromScrolled(Math.max(scrolled, 0));
-        if (target !== displayedIdx) applyDisplay(target);
-      }
-
-      window.addEventListener('scroll', () => {
-        if (raf) return;
-        raf = requestAnimationFrame(() => { raf = null; update(); });
-      }, { passive: true });
-
-      dots.forEach((dot, i) => {
-        dot.addEventListener('click', () => {
-          let el = track, top = 0;
-          while (el) { top += el.offsetTop; el = el.offsetParent; }
-          window.scrollTo({ top: top + i * scrollStep(), behavior: 'smooth' });
-        });
-      });
-
-      // Fade in stage when section is 20% above the viewport bottom
-      const stage = document.querySelector('.ps__stage');
-      const psEl  = document.querySelector('.ps');
-
-      // Prime first image for scale settle
-      const firstPsImg = stage ? stage.querySelector('.ps__img:first-child img') : null;
-      if (firstPsImg) {
-        firstPsImg.style.transform  = 'scale(1.05)';
-        firstPsImg.style.transition = 'transform 3500ms cubic-bezier(0.37, 0, 0.63, 1)';
-      }
-
-      new IntersectionObserver((entries) => {
-        if (!entries[0].isIntersecting) return;
-        stage.classList.add('is-revealed');
-        if (firstPsImg) firstPsImg.style.transform = 'scale(1)';
-      }, { rootMargin: '0px 0px -20% 0px', threshold: 0 }).observe(track);
-
-      // ps-nav-mode is now controlled by the bg IIFE based on tDark
-
-      update();
+      PS_SECTION.dataset.psMode = 'peek';
+      initPeek();
     })();
 
     // Scroll-driven background: light→dark as viz-block leaves, dark→light before .ig enters
     (function () {
-      const darkTrigger  = document.querySelector('.viz-block--reversed');
+      const darkTrigger  = document.querySelector('.ps');
       const lightTrigger = document.querySelector('.ig');
       const igCards      = Array.from(document.querySelectorAll('.ig__card'));
       if (!darkTrigger || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -1696,9 +1805,7 @@
         raf = null;
         const vh = window.innerHeight;
 
-        // Dark: drifts in over 25% vh after viz-block fully exits — matches halved ps padding
-        const rd = darkTrigger.getBoundingClientRect();
-        const tDark = sineInOut(Math.min(Math.max(-rd.bottom / (vh * 0.25), 0), 1));
+        const tDark = 0; // background darkening disabled
 
         // Light: gradual return over 1.5 viewports as gallery approaches
         // Accent: bg shifts to lime as we scroll into the 38vh padding zone above footer
@@ -1721,7 +1828,7 @@
         if (tAccent > 0) {
           rgb = lerp(bgLight, bgAccent, tAccent);
         } else if (tLight > 0) {
-          rgb = lerp(bgDark, bgLight, tLight);
+          rgb = bgLight.slice(); // dark phase disabled — stay light always
         } else {
           rgb = lerp(bgLight, bgDark, tDark);
         }
